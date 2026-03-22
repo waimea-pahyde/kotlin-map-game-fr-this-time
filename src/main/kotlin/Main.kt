@@ -6,13 +6,24 @@ import javax.swing.*
 /**
  * Application entry point
  */
- fun main() {
+fun main() {
     FlatMacDarkLaf.setup()          // Initialise the LAF
 
     val app = App()                 // Get an app state object
     val window = MainWindow(app)    // Spawn the UI, passing in the app state
 
     SwingUtilities.invokeLater { window.show() }
+}
+
+class Location(
+
+    val name: String,
+    val description: String,
+    val leftLocation: Location?,
+    val rightLocation: Location?,
+
+    ) {
+
 }
 
 
@@ -23,19 +34,36 @@ import javax.swing.*
  * @property score the points earned
  */
 class App {
-    var name = "Test"
-    var score = 0
 
-    fun scorePoints(points: Int) {
-        score += points
-    }
+    //      Mr Copley's code. Not deleting  as may come in handy. Comment it out with the rest of it later.
+//    var name = "Test"
+//    var score = 0
+//
+//    fun scorePoints(points: Int) {
+//        score += points
+//    }
+//
+//    fun resetScore() {
+//        score = 0
+//    }
+//
+//    fun maxScoreReached(): Boolean {
+//        return score >= 10000 )
+//    }
 
-    fun resetScore() {
-        score = 0
-    }
+    val map = mutableListOf<Location>()
 
-    fun maxScoreReached(): Boolean {
-        return score >= 10000
+    var currentLocation: Location
+
+    init {
+        val cabin = Location("Cabin", "Creepy", null, map[1])
+        val duckPond = Location("Duck", "Duck", null, null)
+
+//        Add Locations
+        map.add(cabin)
+        map.add(duckPond)
+
+        currentLocation = map[0]
     }
 }
 
@@ -46,10 +74,14 @@ class App {
  * @param app the app state object
  */
 class MainWindow(val app: App) {
-    val frame = JFrame("WINDOW TITLE")
+    val frame = JFrame("ggagagagagagaga change this later")
     private val panel = JPanel().apply { layout = null }
 
-    private val titleLabel = JLabel("APP TITLE")
+    private val titleLabel = JLabel(app.currentLocation.name)
+    private val descLabel = JLabel(app.currentLocation.description)
+
+    private val leftLabel = JLabel(app.currentLocation.leftLocation)
+
 
     private val infoLabel = JLabel()
     private val clickButton = JButton("Click Me!")
@@ -69,6 +101,7 @@ class MainWindow(val app: App) {
         panel.preferredSize = java.awt.Dimension(400, 220)
 
         titleLabel.setBounds(30, 30, 340, 30)
+        descLabel.setBounds(60, 30, 340, 30)
         infoLabel.setBounds(30, 90, 340, 30)
         clickButton.setBounds(30, 150, 240, 40)
         infoButton.setBounds(300, 150, 70, 40)
@@ -77,6 +110,7 @@ class MainWindow(val app: App) {
         panel.add(infoLabel)
         panel.add(clickButton)
         panel.add(infoButton)
+        panel.add(descLabel)
     }
 
     private fun setupStyles() {
@@ -103,7 +137,7 @@ class MainWindow(val app: App) {
     }
 
     private fun handleMainClick() {
-        app.scorePoints(1000)       // Update the app state
+//        app.scorePoints(1000)       // Update the app state
         updateUI()                  // Update this window UI to reflect this
     }
 
@@ -112,15 +146,15 @@ class MainWindow(val app: App) {
     }
 
     fun updateUI() {
-        infoLabel.text = "User ${app.name} has ${app.score} points"
+//        infoLabel.text = "User ${app.name} has ${app.score} points"
 
-        if (app.maxScoreReached()) {
-            clickButton.text = "No More!"
-            clickButton.isEnabled = false
-        } else {
-            clickButton.text = "Click Me!"
-            clickButton.isEnabled = true
-        }
+//        if (app.maxScoreReached()) {
+//            clickButton.text = "No More!"
+//            clickButton.isEnabled = false
+//        } else {
+//            clickButton.text = "Click Me!"
+//            clickButton.isEnabled = true
+//        }
 
         infoWindow.updateUI()       // Keep child dialog window UI up-to-date too
     }
@@ -180,15 +214,15 @@ class InfoWindow(val owner: MainWindow, val app: App) {
     }
 
     private fun handleResetClick() {
-        app.resetScore()    // Update the app state
+//        app.resetScore()    // Update the app state
         owner.updateUI()    // Update the UI to reflect this, via the main window
     }
 
     fun updateUI() {
         // Use app properties to display state
-        infoLabel.text = "<html>User: ${app.name}<br>Score: ${app.score} points"
+//        infoLabel.text = "<html>User: ${app.name}<br>Score: ${app.score} points"
 
-        resetButton.isEnabled = app.score > 0
+//        resetButton.isEnabled = app.score > 0
     }
 
     fun show() {
@@ -201,3 +235,6 @@ class InfoWindow(val owner: MainWindow, val app: App) {
         dialog.isVisible = true
     }
 }
+
+
+
