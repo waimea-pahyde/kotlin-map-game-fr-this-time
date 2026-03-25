@@ -3,9 +3,21 @@ import java.awt.Color
 import java.awt.Font
 import javax.swing.*
 
+
 /**
- * Application entry point
+ * TODO:
+ *      - 149 to 57 something
+ *      - app and then get the normal health and rnadomise
+ *      - theres more notes about that somewhere but god knows where just scroll throughh
+ *      - its one of the blue ones
+ *
+ *
+ *
+ *
+ *      -
  */
+
+
 fun main() {
     FlatMacDarkLaf.setup()          // Initialise the LAF
 
@@ -15,17 +27,8 @@ fun main() {
     SwingUtilities.invokeLater { window.show() }
 }
 
-class Location(
 
-    val name: String,
-    val description: String,
-    val leftLocation: Location?,
-    val rightLocation: Location?,
-
-    ) {
-
-}
-
+val map = mutableListOf<Location>()
 
 /**
  * Manage app state
@@ -35,35 +38,47 @@ class Location(
  */
 class App {
 
-    //      Mr Copley's code. Not deleting  as may come in handy. Comment it out with the rest of it later.
-//    var name = "Test"
-//    var score = 0
+//TODO
+//    - in location - DONE you can now be in a location
+//    - enemy spawns - Enemy SPAWNS DONE
+//    - show enemy - THOSE ARE THE SAME THINGAS
+//    - show health bar DONE
+//    - doesDamage
+//    - if health = zero alive=false
+//    if roomenemy.isAlive = false button = unblock button yippeee
+//    - if wendigo is dead yippe you win good job kid
 //
-//    fun scorePoints(points: Int) {
-//        score += points
-//    }
-//
-//    fun resetScore() {
-//        score = 0
-//    }
-//
-//    fun maxScoreReached(): Boolean {
-//        return score >= 10000 )
-//    }
 
-    val map = mutableListOf<Location>()
 
     var currentLocation: Location
 
+
     init {
-        val cabin = Location("Cabin", "Creepy", null, map[1])
-        val duckPond = Location("Duck", "Duck", null, null)
+        val cabin = Location("Cabin", "Creepy")
+        val duckPond = Location("Duck", "Duck")
+
+        val eyeOfJerru = Enemy("Jerry", 500000, 500000)
 
 //        Add Locations
         map.add(cabin)
         map.add(duckPond)
 
+        cabin.addEnemy(eyeOfJerru)
+        print(cabin.listOfEnemies)
+
+
         currentLocation = map[0]
+    }
+
+
+    //    todo check if he's dead up at the  location thing and if he is make him dissapear. Or turn him into a corpse
+//    road kill eyeball carcuses are delicious
+//    while enemy isn't dead or whatever they aren't paying me for this
+    fun takeDamage() {
+        if (currentLocation.listOfEnemies[0].enemyCurrentHP == 0) {
+            currentLocation.listOfEnemies[0].a
+
+        }
     }
 }
 
@@ -80,14 +95,30 @@ class MainWindow(val app: App) {
     private val titleLabel = JLabel(app.currentLocation.name)
     private val descLabel = JLabel(app.currentLocation.description)
 
-    private val leftLabel = JLabel(app.currentLocation.leftLocation)
-
 
     private val infoLabel = JLabel()
     private val clickButton = JButton("Click Me!")
     private val infoButton = JButton("Info")
 
-    private val infoWindow = InfoWindow(this, app)      // Pass app state to dialog too
+    private val infoWindow = InfoWindow(this, app)
+
+    private val enemyName = JLabel(app.currentLocation.listOfEnemies[0].enemyName)
+    private val enemyHealth =
+        JLabel("${app.currentLocation.listOfEnemies[0].enemyCurrentHP}/${app.currentLocation.listOfEnemies[0].enemyMaxHP}")
+
+    private val enemyItself = JLabel("I AM ENEMY AND WILL LATER BE REPLACED BY A POORLY CROPPED JPeG!!!")
+
+
+// todo
+//    - show enemy health whatever out of whatever
+//    - add action listener on the enemy for when he's clicked with a random number for damage yada yada
+//    - add action listener for a timer that goes off at a random-ish time and takes health from the player
+//    - oh fuck I forgot about the player give him a class or something too
+//    - then just like. do the same for him.
+//    - worry about that later.
+
+
+    // Pass app state to dialog too
 
     init {
         setupLayout()
@@ -98,19 +129,25 @@ class MainWindow(val app: App) {
     }
 
     private fun setupLayout() {
-        panel.preferredSize = java.awt.Dimension(400, 220)
+        panel.preferredSize = java.awt.Dimension(1080, 1440)
 
         titleLabel.setBounds(30, 30, 340, 30)
         descLabel.setBounds(60, 30, 340, 30)
         infoLabel.setBounds(30, 90, 340, 30)
-        clickButton.setBounds(30, 150, 240, 40)
+
         infoButton.setBounds(300, 150, 70, 40)
+        enemyName.setBounds(30, 50, 30, 30)
+        enemyHealth.setBounds(30, 90, 300, 30)
+        enemyItself.setBounds(500, 300, 500, 500)
 
         panel.add(titleLabel)
         panel.add(infoLabel)
         panel.add(clickButton)
         panel.add(infoButton)
         panel.add(descLabel)
+        panel.add(enemyName)
+        panel.add(enemyHealth)
+        panel.add(enemyItself)
     }
 
     private fun setupStyles() {
@@ -132,18 +169,23 @@ class MainWindow(val app: App) {
     }
 
     private fun setupActions() {
-        clickButton.addActionListener { handleMainClick() }
+
         infoButton.addActionListener { handleInfoClick() }
+        enemyItself.addActionListener { handleMainClick() }
+
     }
 
     private fun handleMainClick() {
-//        app.scorePoints(1000)       // Update the app state
+
+
+        app.takeDamage()       // Update the app state
         updateUI()                  // Update this window UI to reflect this
     }
 
     private fun handleInfoClick() {
         infoWindow.show()
     }
+
 
     fun updateUI() {
 //        infoLabel.text = "User ${app.name} has ${app.score} points"
@@ -234,6 +276,30 @@ class InfoWindow(val owner: MainWindow, val app: App) {
 
         dialog.isVisible = true
     }
+}
+
+class Enemy(
+    val enemyName: String,
+    val enemyMaxHP: Int,
+    var enemyCurrentHP: Int,
+
+
+    ) {
+
+
+}
+
+class Location(
+
+    val name: String,
+    val description: String,
+) {
+
+    val listOfEnemies = mutableListOf<Enemy>()
+    fun addEnemy(enemy: Enemy) {
+        listOfEnemies.add(enemy)
+    }
+
 }
 
 
