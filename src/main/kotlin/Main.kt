@@ -52,8 +52,12 @@ class App {
 
     var currentLocation: Location
 
+    var currentPlayer: Player
 
     init {
+        val currentPlayer = Player()
+
+
         val cabin = Location("Cabin", "Creepy")
         val duckPond = Location("Duck", "Duck")
 
@@ -75,10 +79,27 @@ class App {
 //    road kill eyeball carcuses are delicious
 //    while enemy isn't dead or whatever they aren't paying me for this
     fun takeDamage() {
-        if (currentLocation.listOfEnemies[0].enemyCurrentHP == 0) {
-            currentLocation.listOfEnemies[0].a
+        while (currentLocation.listOfEnemies[0].enemyCurrentHP != 0) {
+            currentLocation.listOfEnemies[0].enemyCurrentHP -= c
 
         }
+
+
+
+        if (currentLocation.listOfEnemies[0].enemyCurrentHP == 0) {
+            currentLocation.listOfEnemies[0].alive = false
+            currentLocation.listOfEnemies[0].doIBreathe()
+
+
+        }
+    }
+
+
+    fun doIBreathe() {
+        if (currentLocation.listOfEnemies[0].alive) {
+            currentLocation.listOfEnemies[0].status = "alive"
+        } else currentLocation.listOfEnemies[0].status = "dead"
+
     }
 }
 
@@ -95,6 +116,8 @@ class MainWindow(val app: App) {
     private val titleLabel = JLabel(app.currentLocation.name)
     private val descLabel = JLabel(app.currentLocation.description)
 
+    private val playerNameInput = JTextField(20)
+
 
     private val infoLabel = JLabel()
     private val clickButton = JButton("Click Me!")
@@ -106,7 +129,8 @@ class MainWindow(val app: App) {
     private val enemyHealth =
         JLabel("${app.currentLocation.listOfEnemies[0].enemyCurrentHP}/${app.currentLocation.listOfEnemies[0].enemyMaxHP}")
 
-    private val enemyItself = JLabel("I AM ENEMY AND WILL LATER BE REPLACED BY A POORLY CROPPED JPeG!!!")
+    private val enemyItself =
+        JButton("I AM ENEMY AND WILL LATER BE REPLACED BY A POORLY CROPPED JPeG!!! I am ${app.currentLocation.listOfEnemies[0].status}")
 
 
 // todo
@@ -139,6 +163,7 @@ class MainWindow(val app: App) {
         enemyName.setBounds(30, 50, 30, 30)
         enemyHealth.setBounds(30, 90, 300, 30)
         enemyItself.setBounds(500, 300, 500, 500)
+        playerNameInput.setBounds(200, 150, 50, 50)
 
         panel.add(titleLabel)
         panel.add(infoLabel)
@@ -148,6 +173,7 @@ class MainWindow(val app: App) {
         panel.add(enemyName)
         panel.add(enemyHealth)
         panel.add(enemyItself)
+        panel.add(playerNameInput)
     }
 
     private fun setupStyles() {
@@ -172,6 +198,7 @@ class MainWindow(val app: App) {
 
         infoButton.addActionListener { handleInfoClick() }
         enemyItself.addActionListener { handleMainClick() }
+        playerNameInput.addActionListener { getPlayerName() }
 
     }
 
@@ -186,6 +213,11 @@ class MainWindow(val app: App) {
         infoWindow.show()
     }
 
+    fun getPlayerName(): String {
+        val playerName: String = playerNameInput.toString()
+        return playerName
+
+    }
 
     fun updateUI() {
 //        infoLabel.text = "User ${app.name} has ${app.score} points"
@@ -282,11 +314,19 @@ class Enemy(
     val enemyName: String,
     val enemyMaxHP: Int,
     var enemyCurrentHP: Int,
+    var alive: Boolean = true
 
 
-    ) {
+) {
+    var status = ""
 
+    //    Probably unnecasary, but checks the boolean and sets the status to be 'alive/dead' in plaintext
+    fun doIBreathe() {
+        if (alive) {
+            status = "alive"
+        } else status = "dead"
 
+    }
 }
 
 class Location(
@@ -294,7 +334,6 @@ class Location(
     val name: String,
     val description: String,
 ) {
-
     val listOfEnemies = mutableListOf<Enemy>()
     fun addEnemy(enemy: Enemy) {
         listOfEnemies.add(enemy)
@@ -302,5 +341,12 @@ class Location(
 
 }
 
+class Player(
+    val name: String,
+    var damageMultiplier: Int = 1,
+    val baseDamage: Int = 100,
+) {
+
+}
 
 
