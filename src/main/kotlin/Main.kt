@@ -2,6 +2,11 @@ import com.formdev.flatlaf.themes.FlatMacDarkLaf
 import java.awt.Color
 import java.awt.Font
 import javax.swing.*
+import java.awt.Point
+import javax.swing.JButton
+import javax.swing.JFrame
+import javax.swing.Timer
+import kotlin.math.sin
 
 
 /**
@@ -48,8 +53,15 @@ class App {
         val cabin = Location("Cabin", "Creepy")
         val duckPond = Location("Duck Pond", "Ducky")
 
-        val eyeOfJerru = Enemy("Jerry", 10000, 10000, true, 300, 10)
-        val duckCat = Enemy("David the Duck Cat", 10000, 10000, true, 300, 10)
+        val JerrysLens = Weapon("Jerry's Lens", "A frisbee-like lens, able to slice through enemy's with ease.", 1.5)
+        val duckCatsBeak = Weapon("A Ducats Beak", "A sharp spear, able to pierce through enemys with the force of a flock of ducks.",
+            2.0)
+
+        val eyeOfJerru = Enemy("Jerry", 500, 500, true, 50, 10, JerrysLens, "Who are you and why have you invaded my cabin?!", "Alright, two can play that game.")
+        val duckCat = Enemy("David the Duck Cat", 1000, 1000, true, 100, 10, duckCatsBeak, "Quack. QuackMeow. Quack quack quack.", "QUACKKKKK!")
+
+
+
 
 //        Add Locations
         map.add(cabin)
@@ -65,20 +77,43 @@ class App {
         currentLocation = map[0]
     }
 
+    /**
+     * fun current damage taken
+     * Call current damage taken when calling take damage
+     * then in main window get the value too
+     */
 
-    fun takeDamage() {
+    fun takeDamage(){
+
+//      todo check if that's okay as it's only used once and it makes me laugh.
+
+        currentLocation.listOfEnemies[0].calculateDamage(currentPlayer)
+
         if (currentLocation.listOfEnemies[0].alive) {
-            currentLocation.listOfEnemies[0].enemyCurrentHP -= currentPlayer.calculateDamage()
+            currentLocation.listOfEnemies[0].enemyCurrentHP -= currentLocation.listOfEnemies[0].damageTaken
+//
+//          Checks if the enemy's health has gone below zero and if so sets it equal.
+            if (currentLocation.listOfEnemies[0].enemyCurrentHP < 0) currentLocation.listOfEnemies[0].enemyCurrentHP = 0
+
+//          checks if alive
             currentLocation.listOfEnemies[0].doIBreathe()
 
+
         } else if (!currentLocation.listOfEnemies[0].alive) {
+
+//           If not alive, completes the location which signals the main window to unlock the buttons.
             currentLocation.complete = true
 
         }
 
+//        Returning total damage for the dialogue
+
     }
 
     fun doPlayerDamage() {
+
+
+
         if (currentPlayer.currentHealth <= 0) {
             currentPlayer.alive = false
             return
@@ -87,12 +122,16 @@ class App {
         var playerHit = (currentLocation.listOfEnemies[0].hitChange + playerHitMultiplier)
 
 
+
 //        you see what I'm doing. FInsieh that
-        when (playerHit) {
-            >50 ->
+        if (playerHit > 50) {
+            currentPlayer.currentHealth -= currentLocation.listOfEnemies[0].damage
         }
 
-        currentPlayer.currentHealth -= currentLocation.listOfEnemies[0].damage
+        if (currentLocation.complete) {
+            currentPlayer.currentHealth = currentPlayer.health
+        }
+
 
     }
 
@@ -147,12 +186,13 @@ class MainWindow(val app: App) {
     private val goLeftButton = JButton("Go Left!")
     private val outOfRangeError = JLabel("You can't go that way!")
 
-    private val errorTimer = Timer(1000, null)
+    private val dialogueTimer = Timer(4000, null)
 
     private val playerDeathMessage = JLabel("You are dead")
 
     private val playerHealth = JLabel("${app.currentPlayer.currentHealth}/${app.currentPlayer.health}")
 
+    private val dialogueMessage = JLabel("You did ${app.currentLocation.listOfEnemies[0].damageTaken} damage to ${app.currentLocation.listOfEnemies[0].enemyName}")
 
     //    ==== ENEMY IN THE ROOM ====
     private val enemyName = JLabel(app.currentLocation.listOfEnemies[0].enemyName)
@@ -162,6 +202,7 @@ class MainWindow(val app: App) {
     private val enemyItself =
         JButton("I AM ENEMY AND WILL LATER BE REPLACED BY A POORLY CROPPED JPeG!!! I am ${app.currentLocation.listOfEnemies[0].status}")
 
+    private val droppedWeapon = JButton(app.currentLocation.listOfEnemies[0].weaponDropped.name)
 
 // todo
 //    - add action listener on the enemy for when he's clicked with a random number for damage yada yada
@@ -179,7 +220,7 @@ class MainWindow(val app: App) {
         setupActions()
         setupWindow()
         updateUI()
-        errorTimer.setRepeats(false)
+        dialogueTimer.setRepeats(false)
     }
 
     private fun setupLayout() {
@@ -198,9 +239,11 @@ class MainWindow(val app: App) {
         outOfRangeError.setBounds(200, 250, 100, 100)
         playerHealth.setBounds(50, 50, 100, 100)
 
+        droppedWeapon.setBounds(300, 200, 100, 100)
+
         playerDeathMessage.setBounds(250, 250, 100, 100)
 
-
+        dialogueMessage.setBounds(250, 400, 1000, 100)
 
         panel.add(titleLabel)
         panel.add(infoLabel)
@@ -227,6 +270,8 @@ class MainWindow(val app: App) {
         infoButton.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
     }
 
+
+
     private fun setupWindow() {
         frame.isResizable = false                           // Can't resize
         frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE  // Exit upon window close
@@ -243,9 +288,21 @@ class MainWindow(val app: App) {
         goRightButton.addActionListener { handleGoRightClick() }
         goLeftButton.addActionListener { handleGoLeftClick() }
 
-        errorTimer.addActionListener { closeError() }
+        droppedWeapon.addActionListener { handleWeaponClick() }
+
+        dialogueTimer.addActionListener { closeError() }
+
+        dialogueTimer.addActionListener { closeDialogue() }
 
     }
+
+    fun closeDialogue() {
+        panel.remove(dialogueMessage)
+        panel.revalidate()
+        panel.repaint()
+    }
+
+
 
     fun closeError() {
         panel.remove(outOfRangeError)
@@ -253,10 +310,31 @@ class MainWindow(val app: App) {
         panel.repaint()
     }
 
+    fun showDialogue() {
+        panel.add(dialogueMessage)
+        dialogueTimer.start()
+        panel.revalidate()
+        panel.repaint()
+    }
+
+    private fun handleWeaponClick(){
+        app.currentPlayer.currentWeapon = app.currentLocation.listOfEnemies[0].weaponDropped
+        dialogueMessage.text = "You picked up ${app.currentLocation.listOfEnemies[0].weaponDropped.name}"
+        panel.add(dialogueMessage)
+        dialogueTimer.start()
+        panel.remove(droppedWeapon)
+        panel.revalidate()
+        panel.repaint()
+    }
     private fun handleMainClick() {
+
+
         updateUI()
         app.takeDamage()       // Update the app state
         updateUI()
+        makeButtonShake(enemyItself)
+        showDialogue()
+
         app.doPlayerDamage()
         updateUI()
     }
@@ -268,9 +346,12 @@ class MainWindow(val app: App) {
     private fun handleGoRightClick() {
         val inRange = app.goRight()
         when (inRange) {
-            true -> updateUI()
+            true -> {
+                updateUI()
+                dialogueMessage.text = "You travel right, and arrive at the ${app.currentLocation.name}, a ${app.currentLocation.description}."
+                showDialogue()
+            }
             false -> {
-                println("i am false")
                 panel.add(outOfRangeError)
                 panel.setComponentZOrder(outOfRangeError, 1)
                 panel.revalidate()
@@ -284,14 +365,12 @@ class MainWindow(val app: App) {
 
     private fun handleGoLeftClick() {
         val inRange = app.goLeft()
-        println("lalalalalalalalal")
-        println(inRange)
+
         when (inRange) {
             true -> updateUI()
             false -> {
                 panel.add(outOfRangeError)
-                println("fdsfdsfdsfsdfdfsfdsdfd")
-                errorTimer.start()
+                dialogueTimer.start()
                 panel.setComponentZOrder(outOfRangeError, 1)
                 panel.revalidate()
                 panel.repaint()
@@ -300,6 +379,28 @@ class MainWindow(val app: App) {
         }
         updateUI()
     }
+
+
+    fun makeButtonShake(button: JButton) {
+        val originalLocation: Point = button.location
+        val shakeDistance = 10
+        val shakeDuration = 400 // ms
+        val shakeFrequency = 20 // ms per frame
+        val startTime = System.currentTimeMillis()
+
+        Timer(shakeFrequency) { timerEvent ->
+            val elapsed = System.currentTimeMillis() - startTime
+            if (elapsed > shakeDuration) {
+                button.location = originalLocation
+                (timerEvent.source as Timer).stop()
+            } else {
+                // Calculate sine wave movement
+                val offset = (sin(elapsed.toDouble() * 0.1) * shakeDistance).toInt()
+                button.setLocation(originalLocation.x + offset, originalLocation.y)
+            }
+        }.start()
+    }
+
 
     private fun endGame() {
         panel.remove(titleLabel)
@@ -328,9 +429,13 @@ class MainWindow(val app: App) {
     //    todo add an if room is not complete
     fun updateUI() {
 
+        dialogueMessage.text = "You did ${app.currentLocation.listOfEnemies[0].damageTaken} damage to ${app.currentLocation.listOfEnemies[0].enemyName}!"
+
         if (!app.currentPlayer.alive) endGame()
 
         playerHealth.text = "${app.currentPlayer.currentHealth}/${app.currentPlayer.health}"
+
+        droppedWeapon.text = app.currentLocation.listOfEnemies[0].weaponDropped.name
 
 
         titleLabel.text = app.currentLocation.name
@@ -341,11 +446,18 @@ class MainWindow(val app: App) {
             false -> {
                 goRightButton.isEnabled = false
                 goLeftButton.isEnabled = false
+                enemyItself.isEnabled = true
             }
 
             true -> {
                 goRightButton.isEnabled = true
                 goLeftButton.isEnabled = true
+                enemyItself.isEnabled = false
+                dialogueMessage.text = "You killed ${app.currentLocation.listOfEnemies[0].enemyName}!"
+
+                panel.add(droppedWeapon)
+                panel.revalidate()
+                panel.repaint()
             }
         }
 
@@ -449,7 +561,14 @@ class Enemy(
 
     val hitChange: Int,
 
+    val weaponDropped: Weapon,
 
+
+
+    val dialog1: String,
+    val dialog2: String,
+
+    var damageTaken: Int = 0,
     ) {
     var status = ""
 
@@ -462,6 +581,13 @@ class Enemy(
         if (alive) {
             status = "alive"
         } else status = "dead"
+
+    }
+
+    fun calculateDamage(player: Player) {
+        val randomDamageElementForReplayability = (10..50).random()
+        val totalDamage = (player.calculateDamage() + randomDamageElementForReplayability)
+        damageTaken = totalDamage
 
     }
 }
@@ -481,16 +607,27 @@ class Location(
 
 class Player(
     val name: String = "John",
-    var damageMultiplier: Int = 1,
+
     val baseDamage: Int = 100,
     val health: Int = 1000,
     var currentHealth: Int = 1000,
-    var alive: Boolean = true
+    var alive: Boolean = true,
+    var currentWeapon: Weapon = Weapon("Sharp Stick", "Not much worse than being poked in the eye with this", 1.0)
 ) {
+
+
+
+
+
     fun calculateDamage(): Int {
-        val finalDamage = baseDamage * damageMultiplier
+        val finalDamage = baseDamage * currentWeapon.damageMultiplier.toInt()
         return finalDamage
     }
 }
 
+class Weapon (
+    val name: String,
+    val description: String,
+    val damageMultiplier: Double,
+)
 
