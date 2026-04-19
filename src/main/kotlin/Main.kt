@@ -175,6 +175,10 @@ class MainWindow(val app: App) {
     private val titleLabel = JLabel(app.currentLocation.name)
     private val descLabel = JLabel(app.currentLocation.description)
 
+//    ======Images=======
+    private val duckBackground = ImageIcon(ClassLoader.getSystemResource("images/cabin.jpg"))
+    val background = JLabel(duckBackground)
+
 
     private val infoLabel = JLabel()
     private val clickButton = JButton("Click Me!")
@@ -224,8 +228,9 @@ class MainWindow(val app: App) {
     }
 
     private fun setupLayout() {
-        panel.preferredSize = java.awt.Dimension(1080, 1440)
+        panel.preferredSize = java.awt.Dimension(1194, 834)
 
+        background.setBounds(0, 0,1194, 834)
         titleLabel.setBounds(30, 30, 340, 30)
         descLabel.setBounds(60, 30, 340, 30)
         infoLabel.setBounds(30, 90, 340, 30)
@@ -245,6 +250,8 @@ class MainWindow(val app: App) {
 
         dialogueMessage.setBounds(250, 400, 1000, 100)
 
+
+
         panel.add(titleLabel)
         panel.add(infoLabel)
         panel.add(clickButton)
@@ -256,6 +263,7 @@ class MainWindow(val app: App) {
         panel.add(goRightButton)
         panel.add(goLeftButton)
         panel.add(playerHealth)
+        panel.add(background, JLayeredPane.DEFAULT_LAYER-1)
 
 
     }
