@@ -108,7 +108,6 @@ class App {
 
     fun takeDamage() {
 
-//      todo check if that's okay as it's only used once and it makes me laugh.
 
         currentLocation.listOfEnemies[0].calculateDamage(currentPlayer)
 
@@ -160,10 +159,9 @@ class App {
 
     //  Invoked by a button in the Main window. If out of bounds, returns false so as the main window can display an error.
     fun goRight(): Boolean {
-        if (map.indexOf(currentLocation) == map.size) return false
+        if (map.indexOf(currentLocation) + 1 !in map.indices) return false
         var newLocation = map.indexOf(currentLocation)
         newLocation += 1
-
 
         currentLocation = map[newLocation]
 
@@ -200,14 +198,20 @@ class MainWindow(val app: App) {
     private val jerryBackground = ImageIcon(ClassLoader.getSystemResource("images/cabin.jpg"))
     val background = JLabel(jerryBackground)
 
+    val leftArrow = ImageIcon(ClassLoader.getSystemResource("images/arrowPointingRight.png"))
+
+    private val titleBarImage = ImageIcon(ClassLoader.getSystemResource("images/titleBar.png"))
+    val titleBackground = JLabel(titleBarImage)
+
 
     private val infoLabel = JLabel()
     private val clickButton = JButton("Click Me!")
     private val infoButton = JButton("Info")
 
 
-    private val goRightButton = JButton("Go Right!")
-    private val goLeftButton = JButton("Go Left!")
+    private val goRightButton =
+        JButton(ImageIcon(ClassLoader.getSystemResource("images/arrow.png")).scaled(90, 90))
+    private val goLeftButton = JButton(leftArrow.scaled(90, 90))
     private val outOfRangeError = JLabel("You can't go that way!")
 
     private val dialogueTimer = Timer(4000, null)
@@ -230,6 +234,9 @@ class MainWindow(val app: App) {
     private val droppedWeapon = JButton(app.currentLocation.listOfEnemies[0].weaponDropped.name)
 
 
+    private val placeDialogue = JLabel("This is a place")
+    private val placeDialogueBackground = ImageIcon(ClassLoader.getSystemResource("images/dialogueBox.png"))
+
     init {
         setupLayout()
         setupStyles()
@@ -243,7 +250,13 @@ class MainWindow(val app: App) {
         panel.preferredSize = java.awt.Dimension(1194, 834)
 
         background.setBounds(0, 0, 1194, 834)
-        titleLabel.setBounds(30, 30, 340, 30)
+
+        titleLabel.setBounds(520, 40, 340, 30)
+        titleBackground.setBounds(230, 10, 700, 100)
+
+        goRightButton.setBounds(250, 10, 100, 100)
+        goLeftButton.setBounds(800, 15, 100, 100)
+
         descLabel.setBounds(60, 30, 340, 30)
         infoLabel.setBounds(30, 90, 340, 30)
 
@@ -251,8 +264,9 @@ class MainWindow(val app: App) {
         enemyName.setBounds(30, 50, 30, 30)
         enemyHealth.setBounds(30, 90, 300, 30)
         enemyItself.setBounds(300, 300, 500, 500)
-        goRightButton.setBounds(100, 250, 100, 100)
-        goLeftButton.setBounds(300, 250, 100, 100)
+
+        placeDialogue.setBounds(230, 400, 3000, 50)
+
         outOfRangeError.setBounds(200, 250, 100, 100)
         playerHealth.setBounds(50, 50, 100, 100)
 
@@ -264,17 +278,25 @@ class MainWindow(val app: App) {
 
 
 
-        panel.add(titleLabel)
+
+
         panel.add(infoLabel)
-        panel.add(clickButton)
-        panel.add(infoButton)
-        panel.add(descLabel)
-        panel.add(enemyName)
-        panel.add(enemyHealth)
-        panel.add(enemyItself)
-        panel.add(goRightButton)
-        panel.add(goLeftButton)
-        panel.add(playerHealth)
+        panel.add(clickButton, JLayeredPane.DEFAULT_LAYER)
+
+        panel.add(descLabel, JLayeredPane.DEFAULT_LAYER)
+        panel.add(enemyName, JLayeredPane.DEFAULT_LAYER)
+        panel.add(enemyHealth, JLayeredPane.DEFAULT_LAYER)
+        panel.add(enemyItself, JLayeredPane.DEFAULT_LAYER)
+        panel.add(goRightButton, JLayeredPane.DEFAULT_LAYER)
+        panel.add(goLeftButton, JLayeredPane.DEFAULT_LAYER)
+        panel.add(playerHealth, JLayeredPane.DEFAULT_LAYER)
+
+
+        panel.add(titleLabel, JLayeredPane.DEFAULT_LAYER + 1)
+        panel.add(titleBackground, JLayeredPane.DEFAULT_LAYER - 1)
+
+
+
         panel.add(background, JLayeredPane.DEFAULT_LAYER - 1)
 
 
@@ -292,6 +314,13 @@ class MainWindow(val app: App) {
         enemyItself.isBorderPainted = false
         enemyItself.isFocusPainted = false
         enemyItself.isContentAreaFilled = false
+
+        goLeftButton.isFocusPainted = false
+        goRightButton.isFocusPainted = false
+        goLeftButton.isContentAreaFilled = false
+        goRightButton.isContentAreaFilled = false
+        goLeftButton.isBorderPainted = false
+        goRightButton.isBorderPainted = false
     }
 
 
@@ -321,6 +350,7 @@ class MainWindow(val app: App) {
 
     fun closeDialogue() {
         panel.remove(dialogueMessage)
+        panel.remove(placeDialogue)
         panel.revalidate()
         panel.repaint()
     }
@@ -334,6 +364,13 @@ class MainWindow(val app: App) {
 
     fun showDialogue() {
         panel.add(dialogueMessage, JLayeredPane.DEFAULT_LAYER + 1)
+        dialogueTimer.start()
+        panel.revalidate()
+        panel.repaint()
+    }
+
+    fun showPlaceDialogue() {
+        panel.add(placeDialogue, JLayeredPane.DEFAULT_LAYER + 1)
         dialogueTimer.start()
         panel.revalidate()
         panel.repaint()
@@ -369,9 +406,9 @@ class MainWindow(val app: App) {
             true -> {
                 updateUI()
 //                todo get this working
-                dialogueMessage.text =
-                    "You travel right, and arrive at the ${app.currentLocation.name}, a ${app.currentLocation.description}."
-                showDialogue()
+                placeDialogue.text =
+                    "You travel left, and arrive at the ${app.currentLocation.name}, a ${app.currentLocation.description}."
+                showPlaceDialogue()
             }
 
             false -> {
