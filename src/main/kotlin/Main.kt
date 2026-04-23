@@ -233,9 +233,14 @@ class MainWindow(val app: App) {
 
     private val droppedWeapon = JButton(app.currentLocation.listOfEnemies[0].weaponDropped.name)
 
-
+    //    === DIALOGUE BOXES === //
     private val placeDialogue = JLabel("This is a place")
-    private val placeDialogueBackground = ImageIcon(ClassLoader.getSystemResource("images/dialogueBox.png"))
+    private val placeDialogueBackground =
+        JLabel(ImageIcon(ClassLoader.getSystemResource("images/transparentDialogue.png")).scaled(600, 300))
+//    ======================
+
+    private val winText = JLabel("You won!!")
+
 
     init {
         setupLayout()
@@ -265,7 +270,8 @@ class MainWindow(val app: App) {
         enemyHealth.setBounds(30, 90, 300, 30)
         enemyItself.setBounds(300, 300, 500, 500)
 
-        placeDialogue.setBounds(230, 400, 3000, 50)
+        placeDialogue.setBounds(420, 290, 3000, 50)
+        placeDialogueBackground.setBounds(300, 150, 600, 300)
 
         outOfRangeError.setBounds(200, 250, 100, 100)
         playerHealth.setBounds(50, 50, 100, 100)
@@ -273,6 +279,9 @@ class MainWindow(val app: App) {
         droppedWeapon.setBounds(300, 200, 100, 100)
 
         playerDeathMessage.setBounds(250, 250, 100, 100)
+        winText.setBounds(250, 250, 100, 100)
+
+
 
         dialogueMessage.setBounds(250, 400, 1000, 100)
 
@@ -350,6 +359,7 @@ class MainWindow(val app: App) {
 
     fun closeDialogue() {
         panel.remove(dialogueMessage)
+        panel.remove(placeDialogueBackground)
         panel.remove(placeDialogue)
         panel.revalidate()
         panel.repaint()
@@ -364,13 +374,15 @@ class MainWindow(val app: App) {
 
     fun showDialogue() {
         panel.add(dialogueMessage, JLayeredPane.DEFAULT_LAYER + 1)
+
         dialogueTimer.start()
         panel.revalidate()
         panel.repaint()
     }
 
     fun showPlaceDialogue() {
-        panel.add(placeDialogue, JLayeredPane.DEFAULT_LAYER + 1)
+        panel.add(placeDialogue, JLayeredPane.DEFAULT_LAYER)
+        panel.add(placeDialogueBackground, JLayeredPane.DEFAULT_LAYER + 1)
         dialogueTimer.start()
         panel.revalidate()
         panel.repaint()
@@ -394,6 +406,8 @@ class MainWindow(val app: App) {
         updateUI()
         makeButtonShake(enemyItself)
         showDialogue()
+
+        winGameCheck()
 
         app.doPlayerDamage()
         updateUI()
@@ -476,6 +490,22 @@ class MainWindow(val app: App) {
         panel.add(playerDeathMessage)
         panel.revalidate()
         panel.repaint()
+    }
+
+    fun winGameCheck() {
+        for (location in map) {
+            if (!location.complete) return
+        }
+        winGame()
+    }
+
+    fun winGame() {
+        panel.removeAll()
+        panel.add(winText)
+        panel.revalidate()
+        panel.repaint()
+
+
     }
 
 //    todo either a. fix this. I dont want to do that. b. remove it. i don't want to do that either. we live in limbo.
