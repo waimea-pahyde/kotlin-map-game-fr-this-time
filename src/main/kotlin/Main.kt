@@ -1,5 +1,4 @@
 import com.formdev.flatlaf.themes.FlatMacDarkLaf
-import java.awt.Color
 import java.awt.Font
 import java.awt.Point
 import javax.swing.*
@@ -68,9 +67,8 @@ class App {
             50,
             10,
             JerrysLens,
-            "Who are you and why have you invaded my cabin?!",
-            "Alright, two can play that game."
-        )
+
+            )
         val duckCat = Enemy(
             "David the Duck Cat",
             1000,
@@ -81,8 +79,6 @@ class App {
             100,
             10,
             duckCatsBeak,
-            "Quack. QuackMeow. Quack quack quack.",
-            "QUACKKKKK!"
         )
 
 
@@ -192,7 +188,7 @@ class MainWindow(val app: App) {
     private val panel = JPanel().apply { layout = null }
 
     private val titleLabel = JLabel(app.currentLocation.name)
-    private val descLabel = JLabel(app.currentLocation.description)
+
 
     //    ======Images=======
     private val jerryBackground = ImageIcon(ClassLoader.getSystemResource("images/cabin.jpg"))
@@ -203,30 +199,31 @@ class MainWindow(val app: App) {
     private val titleBarImage = ImageIcon(ClassLoader.getSystemResource("images/titleBar.png"))
     val titleBackground = JLabel(titleBarImage)
 
-
-    private val infoLabel = JLabel()
-    private val clickButton = JButton("Click Me!")
-    private val infoButton = JButton("Info")
-
-
     private val goRightButton =
         JButton(ImageIcon(ClassLoader.getSystemResource("images/arrow.png")).scaled(90, 90))
     private val goLeftButton = JButton(leftArrow.scaled(90, 90))
+
+
     private val outOfRangeError = JLabel("You can't go that way!")
 
     private val dialogueTimer = Timer(4000, null)
+    private val titleScreenTimer = Timer(10000, null)
 
     private val playerDeathMessage = JLabel("You are dead")
 
     private val playerHealth = JLabel("${app.currentPlayer.currentHealth}/${app.currentPlayer.health}")
+    private val playerHealthBar =
+        JLabel(ImageIcon(ClassLoader.getSystemResource("images/playerHealth.png")).scaled(300, 500))
 
-    private val dialogueMessage =
-        JLabel("You did ${app.currentLocation.listOfEnemies[0].damageTaken} damage to ${app.currentLocation.listOfEnemies[0].enemyName}")
 
     //    ==== ENEMY IN THE ROOM ====
     private val enemyName = JLabel(app.currentLocation.listOfEnemies[0].enemyName)
+
+    private val enemyHealthBar =
+        JLabel(ImageIcon(ClassLoader.getSystemResource("images/enemyHealth.png")).scaled(600, 400))
     private val enemyHealth =
         JLabel("${app.currentLocation.listOfEnemies[0].enemyCurrentHP}/${app.currentLocation.listOfEnemies[0].enemyMaxHP}")
+
 
     private val enemyItself =
         JButton(app.currentLocation.listOfEnemies[0].enemyForm.scaled(500, 500))
@@ -237,6 +234,13 @@ class MainWindow(val app: App) {
     private val placeDialogue = JLabel("This is a place")
     private val placeDialogueBackground =
         JLabel(ImageIcon(ClassLoader.getSystemResource("images/transparentDialogue.png")).scaled(600, 300))
+
+    private val damageDialogueMessage =
+        JLabel("You did ${app.currentLocation.listOfEnemies[0].damageTaken} damage to ${app.currentLocation.listOfEnemies[0].enemyName}")
+    private val damageDialogueBox =
+        JLabel(ImageIcon(ClassLoader.getSystemResource("images/damageDialogue.png")).scaled(600, 250))
+
+
 //    ======================
 
     private val winText = JLabel("You won!!")
@@ -262,19 +266,26 @@ class MainWindow(val app: App) {
         goRightButton.setBounds(250, 10, 100, 100)
         goLeftButton.setBounds(800, 15, 100, 100)
 
-        descLabel.setBounds(60, 30, 340, 30)
-        infoLabel.setBounds(30, 90, 340, 30)
 
-        infoButton.setBounds(300, 150, 70, 40)
         enemyName.setBounds(30, 50, 30, 30)
-        enemyHealth.setBounds(30, 90, 300, 30)
-        enemyItself.setBounds(300, 300, 500, 500)
 
-        placeDialogue.setBounds(420, 290, 3000, 50)
-        placeDialogueBackground.setBounds(300, 150, 600, 300)
+
+        enemyHealth.setBounds(50, 625, 300, 30)
+        enemyHealthBar.setBounds(-100, 600, 500, 100)
+
+        playerHealth.setBounds(50, 520, 300, 30)
+        playerHealthBar.setBounds(-150, 500, 500, 100)
+
+
+        enemyItself.setBounds(300, 200, 500, 500)
+
+        placeDialogue.setBounds(430, 350, 300, 50)
+        placeDialogueBackground.setBounds(330, 230, 600, 300)
 
         outOfRangeError.setBounds(200, 250, 100, 100)
-        playerHealth.setBounds(50, 50, 100, 100)
+
+
+
 
         droppedWeapon.setBounds(300, 200, 100, 100)
 
@@ -282,29 +293,27 @@ class MainWindow(val app: App) {
         winText.setBounds(250, 250, 100, 100)
 
 
-
-        dialogueMessage.setBounds(250, 400, 1000, 100)
-
-
+        damageDialogueMessage.setBounds(480, 150, 1000, 100)
+        damageDialogueBox.setBounds(370, 100, 400, 200)
 
 
 
-        panel.add(infoLabel)
-        panel.add(clickButton, JLayeredPane.DEFAULT_LAYER)
 
-        panel.add(descLabel, JLayeredPane.DEFAULT_LAYER)
+
+
         panel.add(enemyName, JLayeredPane.DEFAULT_LAYER)
         panel.add(enemyHealth, JLayeredPane.DEFAULT_LAYER)
+        panel.add(enemyHealthBar, JLayeredPane.DEFAULT_LAYER - 1)
+
         panel.add(enemyItself, JLayeredPane.DEFAULT_LAYER)
         panel.add(goRightButton, JLayeredPane.DEFAULT_LAYER)
         panel.add(goLeftButton, JLayeredPane.DEFAULT_LAYER)
-        panel.add(playerHealth, JLayeredPane.DEFAULT_LAYER)
 
+        panel.add(playerHealth, JLayeredPane.DEFAULT_LAYER)
+        panel.add(playerHealthBar, JLayeredPane.DEFAULT_LAYER - 1)
 
         panel.add(titleLabel, JLayeredPane.DEFAULT_LAYER + 1)
         panel.add(titleBackground, JLayeredPane.DEFAULT_LAYER - 1)
-
-
 
         panel.add(background, JLayeredPane.DEFAULT_LAYER - 1)
 
@@ -313,12 +322,6 @@ class MainWindow(val app: App) {
 
     private fun setupStyles() {
         titleLabel.font = Font(Font.SANS_SERIF, Font.BOLD, 32)
-        infoLabel.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
-
-        clickButton.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
-        clickButton.background = Color(0xcc0055)
-
-        infoButton.font = Font(Font.SANS_SERIF, Font.PLAIN, 20)
 
         enemyItself.isBorderPainted = false
         enemyItself.isFocusPainted = false
@@ -343,9 +346,8 @@ class MainWindow(val app: App) {
 
     private fun setupActions() {
 
-
         enemyItself.addActionListener { handleMainClick() }
-//        playerNameInput.addActionListener { getPlayerName() }
+
         goRightButton.addActionListener { handleGoRightClick() }
         goLeftButton.addActionListener { handleGoLeftClick() }
 
@@ -357,10 +359,34 @@ class MainWindow(val app: App) {
 
     }
 
+    fun titleScreen() {
+        panel.removeAll()
+        var titleScreen = mutableListOf<ImageIcon>()
+        val titleScreen1 = ImageIcon(ClassLoader.getSystemResource("images/titleScreen1.png"))
+        val titleScreen2 = ImageIcon(ClassLoader.getSystemResource("images/titleScreen2.png"))
+        val titleScreen3 = ImageIcon(ClassLoader.getSystemResource("images/titleScreen3.png"))
+        val titleScreen4 = ImageIcon(ClassLoader.getSystemResource("images/titleScreen4.png"))
+        val titleScreen5 = ImageIcon(ClassLoader.getSystemResource("images/titleScreen5.png"))
+        titleScreen.add(titleScreen1)
+        titleScreen.add(titleScreen2)
+        titleScreen.add(titleScreen3)
+        titleScreen.add(titleScreen4)
+        titleScreen.add(titleScreen5)
+
+        for (screen in titleScreen) {
+
+        }
+
+
+    }
+
+
     fun closeDialogue() {
-        panel.remove(dialogueMessage)
+        panel.remove(damageDialogueMessage)
+        panel.remove(damageDialogueBox)
         panel.remove(placeDialogueBackground)
         panel.remove(placeDialogue)
+
         panel.revalidate()
         panel.repaint()
     }
@@ -373,7 +399,9 @@ class MainWindow(val app: App) {
     }
 
     fun showDialogue() {
-        panel.add(dialogueMessage, JLayeredPane.DEFAULT_LAYER + 1)
+        panel.add(damageDialogueBox, JLayeredPane.DEFAULT_LAYER)
+        panel.add(damageDialogueMessage, JLayeredPane.DEFAULT_LAYER)
+
 
         dialogueTimer.start()
         panel.revalidate()
@@ -381,17 +409,22 @@ class MainWindow(val app: App) {
     }
 
     fun showPlaceDialogue() {
+        panel.remove(damageDialogueMessage)
+        panel.remove(damageDialogueBox)
         panel.add(placeDialogue, JLayeredPane.DEFAULT_LAYER)
         panel.add(placeDialogueBackground, JLayeredPane.DEFAULT_LAYER + 1)
         dialogueTimer.start()
         panel.revalidate()
         panel.repaint()
+
+
     }
+
 
     private fun handleWeaponClick() {
         app.currentPlayer.currentWeapon = app.currentLocation.listOfEnemies[0].weaponDropped
-        dialogueMessage.text = "You picked up ${app.currentLocation.listOfEnemies[0].weaponDropped.name}"
-        panel.add(dialogueMessage)
+        damageDialogueMessage.text = "You picked up ${app.currentLocation.listOfEnemies[0].weaponDropped.name}"
+        panel.add(damageDialogueMessage)
         dialogueTimer.start()
         panel.remove(droppedWeapon)
         panel.revalidate()
@@ -399,7 +432,6 @@ class MainWindow(val app: App) {
     }
 
     private fun handleMainClick() {
-
 
         updateUI()
         app.takeDamage()       // Update the app state
@@ -419,7 +451,6 @@ class MainWindow(val app: App) {
         when (inRange) {
             true -> {
                 updateUI()
-//                todo get this working
                 placeDialogue.text =
                     "You travel left, and arrive at the ${app.currentLocation.name}, a ${app.currentLocation.description}."
                 showPlaceDialogue()
@@ -475,13 +506,9 @@ class MainWindow(val app: App) {
         }.start()
     }
 
-
     private fun endGame() {
         panel.remove(titleLabel)
-        panel.remove(infoLabel)
-        panel.remove(clickButton)
-        panel.remove(infoButton)
-        panel.remove(descLabel)
+
         panel.remove(enemyName)
         panel.remove(enemyHealth)
         panel.remove(enemyItself)
@@ -508,18 +535,10 @@ class MainWindow(val app: App) {
 
     }
 
-//    todo either a. fix this. I dont want to do that. b. remove it. i don't want to do that either. we live in limbo.
-//    fun getPlayerName(): String {
-//        val playerName: String = playerNameInput.toString()
-//        return playerName
-//
-//    }
 
-
-    //    todo add an if room is not complete
     fun updateUI() {
 
-        dialogueMessage.text =
+        damageDialogueMessage.text =
             "You did ${app.currentLocation.listOfEnemies[0].damageTaken} damage to ${app.currentLocation.listOfEnemies[0].enemyName}!"
 
         if (!app.currentPlayer.alive) endGame()
@@ -547,9 +566,9 @@ class MainWindow(val app: App) {
                 goRightButton.isEnabled = true
                 goLeftButton.isEnabled = true
                 enemyItself.isEnabled = false
-                dialogueMessage.text = "You killed ${app.currentLocation.listOfEnemies[0].enemyName}!"
+                damageDialogueMessage.text = "You killed ${app.currentLocation.listOfEnemies[0].enemyName}!"
 
-                panel.add(droppedWeapon)
+                panel.add(droppedWeapon, JLayeredPane.DEFAULT_LAYER + 1)
                 panel.revalidate()
                 panel.repaint()
             }
@@ -591,9 +610,6 @@ class Enemy(
 
     val weaponDropped: Weapon,
 
-
-    val dialog1: String,
-    val dialog2: String,
 
     var damageTaken: Int = 0,
 ) {
