@@ -139,7 +139,6 @@ class App {
         var playerHit = (currentLocation.listOfEnemies[0].hitChange + playerHitMultiplier)
 
 
-//        you see what I'm doing. FInsieh that
         if (playerHit > 50) {
             currentPlayer.currentHealth -= currentLocation.listOfEnemies[0].damage
         }
@@ -190,6 +189,8 @@ class MainWindow(val app: App) {
     private val titleLabel = JLabel(app.currentLocation.name)
 
 
+    var titleScreens = mutableListOf<JLabel>()
+
     //    ======Images=======
     private val jerryBackground = ImageIcon(ClassLoader.getSystemResource("images/cabin.jpg"))
     val background = JLabel(jerryBackground)
@@ -207,7 +208,7 @@ class MainWindow(val app: App) {
     private val outOfRangeError = JLabel("You can't go that way!")
 
     private val dialogueTimer = Timer(4000, null)
-    private val titleScreenTimer = Timer(10000, null)
+    private val titleScreenTimer = Timer(4000, null)
 
     private val playerDeathMessage = JLabel("You are dead")
 
@@ -243,6 +244,9 @@ class MainWindow(val app: App) {
 
 //    ======================
 
+
+    val startButton = JButton(ImageIcon(ClassLoader.getSystemResource("images/startButton.png")).scaled(600, 500))
+
     private val winText = JLabel("You won!!")
 
 
@@ -252,7 +256,8 @@ class MainWindow(val app: App) {
         setupActions()
         setupWindow()
         updateUI()
-        dialogueTimer.setRepeats(false)
+        dialogueTimer.isRepeats = false
+
     }
 
     private fun setupLayout() {
@@ -263,8 +268,12 @@ class MainWindow(val app: App) {
         titleLabel.setBounds(520, 40, 340, 30)
         titleBackground.setBounds(230, 10, 700, 100)
 
+
+        startButton.setBounds(230, 10, 700, 100)
+
         goRightButton.setBounds(250, 10, 100, 100)
         goLeftButton.setBounds(800, 15, 100, 100)
+
 
 
         enemyName.setBounds(30, 50, 30, 30)
@@ -300,22 +309,7 @@ class MainWindow(val app: App) {
 
 
 
-
-        panel.add(enemyName, JLayeredPane.DEFAULT_LAYER)
-        panel.add(enemyHealth, JLayeredPane.DEFAULT_LAYER)
-        panel.add(enemyHealthBar, JLayeredPane.DEFAULT_LAYER - 1)
-
-        panel.add(enemyItself, JLayeredPane.DEFAULT_LAYER)
-        panel.add(goRightButton, JLayeredPane.DEFAULT_LAYER)
-        panel.add(goLeftButton, JLayeredPane.DEFAULT_LAYER)
-
-        panel.add(playerHealth, JLayeredPane.DEFAULT_LAYER)
-        panel.add(playerHealthBar, JLayeredPane.DEFAULT_LAYER - 1)
-
-        panel.add(titleLabel, JLayeredPane.DEFAULT_LAYER + 1)
-        panel.add(titleBackground, JLayeredPane.DEFAULT_LAYER - 1)
-
-        panel.add(background, JLayeredPane.DEFAULT_LAYER - 1)
+        panel.add(startButton)
 
 
     }
@@ -333,6 +327,10 @@ class MainWindow(val app: App) {
         goRightButton.isContentAreaFilled = false
         goLeftButton.isBorderPainted = false
         goRightButton.isBorderPainted = false
+
+        startButton.isFocusPainted = false
+        startButton.isContentAreaFilled = false
+        startButton.isBorderPainted = false
     }
 
 
@@ -357,27 +355,86 @@ class MainWindow(val app: App) {
 
         dialogueTimer.addActionListener { closeDialogue() }
 
-    }
 
-    fun titleScreen() {
-        panel.removeAll()
-        var titleScreen = mutableListOf<ImageIcon>()
-        val titleScreen1 = ImageIcon(ClassLoader.getSystemResource("images/titleScreen1.png"))
-        val titleScreen2 = ImageIcon(ClassLoader.getSystemResource("images/titleScreen2.png"))
-        val titleScreen3 = ImageIcon(ClassLoader.getSystemResource("images/titleScreen3.png"))
-        val titleScreen4 = ImageIcon(ClassLoader.getSystemResource("images/titleScreen4.png"))
-        val titleScreen5 = ImageIcon(ClassLoader.getSystemResource("images/titleScreen5.png"))
-        titleScreen.add(titleScreen1)
-        titleScreen.add(titleScreen2)
-        titleScreen.add(titleScreen3)
-        titleScreen.add(titleScreen4)
-        titleScreen.add(titleScreen5)
 
-        for (screen in titleScreen) {
+        startButton.addActionListener {
+            makeButtonShake(startButton)
+            titleScreen()
 
         }
 
 
+    }
+
+    var currentTitleScreen = 0
+    var lastTitleScreen = false
+
+    fun handleTitleScreenTimer() {
+
+        panel.add(titleScreens[currentTitleScreen])
+        if (currentTitleScreen != 0) panel.remove(titleScreens[currentTitleScreen - 1])
+        panel.revalidate()
+        panel.repaint()
+        currentTitleScreen++
+        if (currentTitleScreen >= titleScreens.size) {
+            lastTitleScreen = true
+
+        }
+
+        if lastTitleScreen = s
+
+    }
+
+    fun titleScreen() {
+        panel.removeAll()
+
+        print("pease see this")
+
+        val titleScreen1 = JLabel(ImageIcon(ClassLoader.getSystemResource("images/titleScreen1.png")).scaled(1194, 834))
+        val titleScreen2 = JLabel(ImageIcon(ClassLoader.getSystemResource("images/titleScreen2.png")).scaled(1194, 834))
+        val titleScreen3 = JLabel(ImageIcon(ClassLoader.getSystemResource("images/titleScreen3.png")).scaled(1194, 834))
+        val titleScreen4 = JLabel(ImageIcon(ClassLoader.getSystemResource("images/titleScreen4.png")).scaled(1194, 834))
+        val titleScreen5 = JLabel(ImageIcon(ClassLoader.getSystemResource("images/titleScreen5.png")).scaled(1194, 834))
+        titleScreens.add(titleScreen1)
+        titleScreens.add(titleScreen2)
+        titleScreens.add(titleScreen3)
+        titleScreens.add(titleScreen4)
+        titleScreens.add(titleScreen5)
+
+        titleScreen1.setBounds(0, 0, 1194, 834)
+        titleScreen2.setBounds(0, 0, 1194, 834)
+        titleScreen3.setBounds(0, 0, 1194, 834)
+        titleScreen4.setBounds(0, 0, 1194, 834)
+        titleScreen5.setBounds(0, 0, 1194, 834)
+
+        titleScreenTimer.addActionListener { handleTitleScreenTimer() }
+
+
+
+        titleScreenTimer.start()
+        handleTitleScreenTimer()
+
+    }
+
+    fun startGame() {
+        panel.add(enemyName, JLayeredPane.DEFAULT_LAYER)
+        panel.add(enemyHealth, JLayeredPane.DEFAULT_LAYER)
+        panel.add(enemyHealthBar, JLayeredPane.DEFAULT_LAYER - 1)
+
+        panel.add(enemyItself, JLayeredPane.DEFAULT_LAYER)
+        panel.add(goRightButton, JLayeredPane.DEFAULT_LAYER)
+        panel.add(goLeftButton, JLayeredPane.DEFAULT_LAYER)
+
+        panel.add(playerHealth, JLayeredPane.DEFAULT_LAYER)
+        panel.add(playerHealthBar, JLayeredPane.DEFAULT_LAYER - 1)
+
+        panel.add(titleLabel, JLayeredPane.DEFAULT_LAYER + 1)
+        panel.add(titleBackground, JLayeredPane.DEFAULT_LAYER - 1)
+
+        panel.add(background, JLayeredPane.DEFAULT_LAYER - 1)
+
+        panel.revalidate()
+        panel.repaint()
     }
 
 
