@@ -1,4 +1,5 @@
 import com.formdev.flatlaf.themes.FlatMacDarkLaf
+import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle
 import java.awt.Font
 import java.awt.Point
 import javax.swing.*
@@ -89,6 +90,12 @@ class App {
 //      Add enemys to the location
         cabin.addEnemy(eyeOfJerru)
         duckPond.addEnemy(duckCat)
+
+//      Add dialogue to the enemies
+        eyeOfJerru.addEnemy("I am not who you seek")
+        eyeOfJerru.addEnemy("But I shall not let you leave until we have finsihed")
+        eyeOfJerru.addEnemy("The Master Plan")
+
 
 
 
@@ -184,7 +191,7 @@ class App {
  */
 class MainWindow(val app: App) {
     val frame = JFrame("ggagagagagagaga change this later")
-    private val panel = JPanel().apply { layout = null }
+    private val panel = JLayeredPane().apply { layout = null }
 
     private val titleLabel = JLabel(app.currentLocation.name)
 
@@ -215,6 +222,12 @@ class MainWindow(val app: App) {
     private val playerHealth = JLabel("${app.currentPlayer.currentHealth}/${app.currentPlayer.health}")
     private val playerHealthBar =
         JLabel(ImageIcon(ClassLoader.getSystemResource("images/playerHealth.png")).scaled(300, 500))
+
+
+
+
+
+
 
 
     //    ==== ENEMY IN THE ROOM ====
@@ -249,6 +262,10 @@ class MainWindow(val app: App) {
 
     private val winText = JLabel("You won!!")
 
+    var enemyDialogueBackground = JLabel(ImageIcon(ClassLoader.getSystemResource("images/transparentDialogue.png")).scaled(600, 300))
+    var enemyDialogue = JButton(app.currentLocation.listOfEnemies[0].listOfDialogues[0])
+
+
 
     init {
         setupLayout()
@@ -269,7 +286,7 @@ class MainWindow(val app: App) {
         titleBackground.setBounds(230, 10, 700, 100)
 
 
-        startButton.setBounds(230, 10, 700, 100)
+        startButton.setBounds(230, 400, 800, 200)
 
         goRightButton.setBounds(250, 10, 100, 100)
         goLeftButton.setBounds(800, 15, 100, 100)
@@ -290,6 +307,10 @@ class MainWindow(val app: App) {
 
         placeDialogue.setBounds(430, 350, 300, 50)
         placeDialogueBackground.setBounds(330, 230, 600, 300)
+
+        enemyDialogue.setBounds(250, 550, 600, 300)
+        enemyDialogueBackground.setBounds(300, 550, 600, 300)
+
 
         outOfRangeError.setBounds(200, 250, 100, 100)
 
@@ -331,7 +352,14 @@ class MainWindow(val app: App) {
         startButton.isFocusPainted = false
         startButton.isContentAreaFilled = false
         startButton.isBorderPainted = false
+
+        enemyDialogue.isBorderPainted = false
+        enemyDialogue.isContentAreaFilled = false
+        enemyDialogue.isFocusPainted = false
+
     }
+
+
 
 
     private fun setupWindow() {
@@ -355,10 +383,10 @@ class MainWindow(val app: App) {
 
         dialogueTimer.addActionListener { closeDialogue() }
 
-
+        enemyDialogue.addActionListener { handleDialogueClick() }
 
         startButton.addActionListener {
-            makeButtonShake(startButton)
+
             titleScreen()
 
         }
@@ -368,27 +396,66 @@ class MainWindow(val app: App) {
 
     var currentTitleScreen = 0
     var lastTitleScreen = false
+    var indexOfCurrentDialogue = 0
+    var lastDialogue = false
+
+
+    fun handleDialogueClick() {
+
+        if (lastDialogue){
+            panel.remove(enemyDialogue)
+            panel.remove(background)
+            panel.add(background, JLayeredPane.DEFAULT_LAYER+2)
+            panel.repaint()
+            panel.revalidate()
+        }
+        enemyDialogue.text = app.currentLocation.listOfEnemies[0].listOfDialogues[indexOfCurrentDialogue]
+        indexOfCurrentDialogue++
+        if (indexOfCurrentDialogue  >= app.currentLocation.listOfEnemies[0].listOfDialogues.size) {
+            lastDialogue = true
+        }
+    }
+
 
     fun handleTitleScreenTimer() {
+        if (lastTitleScreen) {
+            titleScreenTimer.stop()
+            panel.remove(titleScreens[currentTitleScreen-1])
+            startGame()
+            return
+        }
 
         panel.add(titleScreens[currentTitleScreen])
         if (currentTitleScreen != 0) panel.remove(titleScreens[currentTitleScreen - 1])
         panel.revalidate()
         panel.repaint()
         currentTitleScreen++
+
         if (currentTitleScreen >= titleScreens.size) {
             lastTitleScreen = true
-
         }
+    }
 
-        if lastTitleScreen = s
+    fun doRoomDialogue() {
+        panel.add(background, JLayeredPane.DEFAULT_LAYER+4)
+        placeDialogue.text =
+            "You travel left, and arrive at the ${app.currentLocation.name}, a ${app.currentLocation.description}."
+        showPlaceDialogue()
+        updateUI()
+        panel.add(enemyDialogue, JLayeredPane.DEFAULT_LAYER+4)
+        panel.setLayer(enemyDialogue, JLayeredPane.DEFAULT_LAYER+4)
+        panel.add(enemyDialogueBackground, JLayeredPane.DEFAULT_LAYER)
+
+
+
+
 
     }
+
 
     fun titleScreen() {
         panel.removeAll()
 
-        print("pease see this")
 
         val titleScreen1 = JLabel(ImageIcon(ClassLoader.getSystemResource("images/titleScreen1.png")).scaled(1194, 834))
         val titleScreen2 = JLabel(ImageIcon(ClassLoader.getSystemResource("images/titleScreen2.png")).scaled(1194, 834))
@@ -435,6 +502,8 @@ class MainWindow(val app: App) {
 
         panel.revalidate()
         panel.repaint()
+
+        doRoomDialogue()
     }
 
 
@@ -468,8 +537,8 @@ class MainWindow(val app: App) {
     fun showPlaceDialogue() {
         panel.remove(damageDialogueMessage)
         panel.remove(damageDialogueBox)
-        panel.add(placeDialogue, JLayeredPane.DEFAULT_LAYER)
-        panel.add(placeDialogueBackground, JLayeredPane.DEFAULT_LAYER + 1)
+        panel.add(placeDialogue, JLayeredPane.DEFAULT_LAYER+1)
+        panel.add(placeDialogueBackground, JLayeredPane.DEFAULT_LAYER + 2)
         dialogueTimer.start()
         panel.revalidate()
         panel.repaint()
@@ -508,9 +577,7 @@ class MainWindow(val app: App) {
         when (inRange) {
             true -> {
                 updateUI()
-                placeDialogue.text =
-                    "You travel left, and arrive at the ${app.currentLocation.name}, a ${app.currentLocation.description}."
-                showPlaceDialogue()
+                doRoomDialogue()
             }
 
             false -> {
@@ -672,6 +739,9 @@ class Enemy(
 ) {
     var status = ""
 
+
+    val listOfDialogues = mutableListOf<String>()
+
     //    Checks if alive
     fun doIBreathe() {
         if (enemyCurrentHP == 0) {
@@ -682,6 +752,10 @@ class Enemy(
             status = "alive"
         } else status = "dead"
 
+    }
+
+    fun addEnemy(dialogue: String) {
+        listOfDialogues.add(dialogue)
     }
 
     fun calculateDamage(player: Player) {
