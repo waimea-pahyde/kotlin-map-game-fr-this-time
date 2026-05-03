@@ -401,17 +401,18 @@ class MainWindow(val app: App) {
 
 
     fun handleDialogueClick() {
-
-        if (lastDialogue){
+        if (lastDialogue) {
             panel.remove(enemyDialogue)
             panel.remove(background)
-            panel.add(background, JLayeredPane.DEFAULT_LAYER+2)
+            panel.add(background, JLayeredPane.DEFAULT_LAYER + 2)
             panel.repaint()
             panel.revalidate()
         }
+
         enemyDialogue.text = app.currentLocation.listOfEnemies[0].listOfDialogues[indexOfCurrentDialogue]
         indexOfCurrentDialogue++
-        if (indexOfCurrentDialogue  >= app.currentLocation.listOfEnemies[0].listOfDialogues.size) {
+
+        if (indexOfCurrentDialogue >= app.currentLocation.listOfEnemies[0].listOfDialogues.size) {
             lastDialogue = true
         }
     }
