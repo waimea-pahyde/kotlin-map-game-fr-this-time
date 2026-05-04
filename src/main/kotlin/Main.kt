@@ -1,5 +1,4 @@
 import com.formdev.flatlaf.themes.FlatMacDarkLaf
-import jdk.javadoc.internal.doclets.formats.html.markup.HtmlStyle
 import java.awt.Font
 import java.awt.Point
 import javax.swing.*
@@ -51,12 +50,18 @@ class App {
 
         val cabin = Location("Cabin", "Creepy")
         val duckPond = Location("Duck Pond", "Ducky")
+        val eggplantFields = Location("Ye mysterious eggplant fields", "full of eggplants.")
+        val biggerEggplantFields = Location("The larger eggplant fields", "full of smaller eggplants.")
+        val creepyForest = Location("Jerry's Forest", "???")
 
         val JerrysLens = Weapon("Jerry's Lens", "A frisbee-like lens, able to slice through enemy's with ease.", 1.5)
         val duckCatsBeak = Weapon(
             "A Ducats Beak", "A sharp spear, able to pierce through enemys with the force of a flock of ducks.",
             2.0
         )
+        val womanMansSlice = Weapon("Woman Man's slice", "Woman Man's slice", 3.0)
+        val swordOfFriendship = Weapon("Sword of Friendship", "sharp", 5.0)
+        val theFinalEggplant = Weapon("A ticket Home", "safe", 0.0)
 
         val eyeOfJerru = Enemy(
             "Jerry",
@@ -82,19 +87,81 @@ class App {
             duckCatsBeak,
         )
 
+        val womanMan = Enemy(
+            "Woman-Man the Eggplant Fan",
+            2000,
+            2000,
+            ImageIcon(ClassLoader.getSystemResource("images/eggplantFields.PNG")),
+            ImageIcon(ClassLoader.getSystemResource("images/womanMan.PNG")),
+            true,
+            200,
+            30,
+            womanMansSlice
+        )
+        val womanMen = Enemy(
+            "Women-Men the Eggplant Friends",
+            5000,
+            5000,
+            ImageIcon(ClassLoader.getSystemResource("images/eggplantFields.PNG")),
+            ImageIcon(ClassLoader.getSystemResource("images/WomenMen.PNG")),
+            true,
+            300,
+            50,
+            swordOfFriendship
+        )
+
+        val jerry = Enemy(
+            "Jerry",
+            10000,
+            10000,
+            ImageIcon(ClassLoader.getSystemResource("images/theCreepyForest.PNG")),
+            ImageIcon(ClassLoader.getSystemResource("images/AubaJerry.PNG")),
+            true,
+            500,
+            75,
+            theFinalEggplant
+        )
+
 
 //        Add Locations
         map.add(cabin)
         map.add(duckPond)
+        map.add(eggplantFields)
+        map.add(creepyForest)
+        map.add(biggerEggplantFields)
 
 //      Add enemys to the location
         cabin.addEnemy(eyeOfJerru)
         duckPond.addEnemy(duckCat)
+        eggplantFields.addEnemy(womanMan)
+        biggerEggplantFields.addEnemy(womanMen)
+        creepyForest.addEnemy(jerry)
 
 //      Add dialogue to the enemies
-        eyeOfJerru.addEnemy("I am not who you seek")
-        eyeOfJerru.addEnemy("But I shall not let you leave until we have finsihed")
-        eyeOfJerru.addEnemy("The Master Plan")
+        eyeOfJerru.addDialogue("I am not who you seek")
+        eyeOfJerru.addDialogue("But I shall not let you leave until we have finsihed")
+        eyeOfJerru.addDialogue("The Master Plan")
+
+        duckCat.addDialogue("quack (I am the guard of this place)")
+        duckCat.addDialogue("quack quack (And you're supposed to be inside...)")
+        duckCat.addDialogue("QUACH QUACKKKK (FACE MY WRATH!)")
+
+        womanMan.addDialogue("I am woman man the eggplant fan")
+        womanMan.addDialogue("A person of indeterminate gender but")
+        womanMan.addDialogue("by god do I love eggplants.")
+        womanMan.addDialogue("and you've tresspassed on my fields.")
+
+        womanMen.addDialogue("You.. You killed woman man.")
+        womanMen.addDialogue("We'll defeat you with the power of friendship!")
+
+        jerry.addDialogue("Well hello there.")
+        jerry.addDialogue("Did you have a nice sleep?")
+        jerry.addDialogue("Youre probably wondering why I brought you here.")
+        jerry.addDialogue("Look around you. Your love for eggplants has DESTROYED our lands")
+        jerry.addDialogue("So now I'm going to mince you;")
+        jerry.addDialogue("and turn you into an eggplant stew")
+        jerry.addDialogue("Doesn't that sound nice?")
+
 
 
 
@@ -202,6 +269,9 @@ class MainWindow(val app: App) {
     private val jerryBackground = ImageIcon(ClassLoader.getSystemResource("images/cabin.jpg"))
     val background = JLabel(jerryBackground)
 
+    private val eggplantFields = ImageIcon(ClassLoader.getSystemResource("images/eggplantFields.png"))
+
+
     val leftArrow = ImageIcon(ClassLoader.getSystemResource("images/arrowPointingRight.png"))
 
     private val titleBarImage = ImageIcon(ClassLoader.getSystemResource("images/titleBar.png"))
@@ -222,12 +292,6 @@ class MainWindow(val app: App) {
     private val playerHealth = JLabel("${app.currentPlayer.currentHealth}/${app.currentPlayer.health}")
     private val playerHealthBar =
         JLabel(ImageIcon(ClassLoader.getSystemResource("images/playerHealth.png")).scaled(300, 500))
-
-
-
-
-
-
 
 
     //    ==== ENEMY IN THE ROOM ====
@@ -262,9 +326,10 @@ class MainWindow(val app: App) {
 
     private val winText = JLabel("You won!!")
 
-    var enemyDialogueBackground = JLabel(ImageIcon(ClassLoader.getSystemResource("images/transparentDialogue.png")).scaled(600, 300))
-    var enemyDialogue = JButton(app.currentLocation.listOfEnemies[0].listOfDialogues[0])
-
+    var enemyDialogueBackground =
+        JLabel(ImageIcon(ClassLoader.getSystemResource("images/transparentDialogue.png")).scaled(600, 300))
+    var enemyDialogue =
+        JButton("${app.currentLocation.listOfEnemies[0].enemyName}:\"${app.currentLocation.listOfEnemies[0].listOfDialogues[0]}\"")
 
 
     init {
@@ -360,8 +425,6 @@ class MainWindow(val app: App) {
     }
 
 
-
-
     private fun setupWindow() {
         frame.isResizable = false                           // Can't resize
         frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE  // Exit upon window close
@@ -404,12 +467,15 @@ class MainWindow(val app: App) {
         if (lastDialogue) {
             panel.remove(enemyDialogue)
             panel.remove(background)
-            panel.add(background, JLayeredPane.DEFAULT_LAYER + 2)
+            panel.remove(enemyDialogueBackground)
+            panel.add(background, JLayeredPane.DEFAULT_LAYER - 2)
             panel.repaint()
             panel.revalidate()
+            return
         }
 
-        enemyDialogue.text = app.currentLocation.listOfEnemies[0].listOfDialogues[indexOfCurrentDialogue]
+        enemyDialogue.text =
+            ("${app.currentLocation.listOfEnemies[0].enemyName}:\"${app.currentLocation.listOfEnemies[0].listOfDialogues[indexOfCurrentDialogue]}\"")
         indexOfCurrentDialogue++
 
         if (indexOfCurrentDialogue >= app.currentLocation.listOfEnemies[0].listOfDialogues.size) {
@@ -421,7 +487,7 @@ class MainWindow(val app: App) {
     fun handleTitleScreenTimer() {
         if (lastTitleScreen) {
             titleScreenTimer.stop()
-            panel.remove(titleScreens[currentTitleScreen-1])
+            panel.remove(titleScreens[currentTitleScreen - 1])
             startGame()
             return
         }
@@ -438,17 +504,15 @@ class MainWindow(val app: App) {
     }
 
     fun doRoomDialogue() {
-        panel.add(background, JLayeredPane.DEFAULT_LAYER+4)
+        panel.add(background, JLayeredPane.DEFAULT_LAYER + 4)
         placeDialogue.text =
             "You travel left, and arrive at the ${app.currentLocation.name}, a ${app.currentLocation.description}."
         showPlaceDialogue()
         updateUI()
-        panel.add(enemyDialogue, JLayeredPane.DEFAULT_LAYER+4)
-        panel.setLayer(enemyDialogue, JLayeredPane.DEFAULT_LAYER+4)
+        panel.add(enemyDialogue, JLayeredPane.DEFAULT_LAYER + 4)
+        panel.setLayer(enemyDialogue, JLayeredPane.DEFAULT_LAYER + 4)
         panel.add(enemyDialogueBackground, JLayeredPane.DEFAULT_LAYER)
-
-
-
+        indexOfCurrentDialogue++
 
 
     }
@@ -538,7 +602,7 @@ class MainWindow(val app: App) {
     fun showPlaceDialogue() {
         panel.remove(damageDialogueMessage)
         panel.remove(damageDialogueBox)
-        panel.add(placeDialogue, JLayeredPane.DEFAULT_LAYER+1)
+        panel.add(placeDialogue, JLayeredPane.DEFAULT_LAYER + 1)
         panel.add(placeDialogueBackground, JLayeredPane.DEFAULT_LAYER + 2)
         dialogueTimer.start()
         panel.revalidate()
@@ -755,7 +819,7 @@ class Enemy(
 
     }
 
-    fun addEnemy(dialogue: String) {
+    fun addDialogue(dialogue: String) {
         listOfDialogues.add(dialogue)
     }
 
