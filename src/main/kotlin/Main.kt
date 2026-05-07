@@ -51,7 +51,7 @@ class App {
 
 
 //        === WEAPON SETUP ===
-        val jerrysLens = Weapon("Jerry's Lens", 1.5)
+        val jerrysLens = Weapon("Jerry's Lens", 2.0)
         val duckCatsBeak = Weapon("A Ducats Beak", 3.0)
         val womanMansSlice = Weapon("Woman Man's slice", 10.0)
         val swordOfFriendship = Weapon("Sword of Friendship", 15.0)
@@ -177,13 +177,14 @@ class App {
 //        If the enemy is alive, then take the damage
         if (currentLocation.listOfEnemies[0].alive) {
             currentLocation.listOfEnemies[0].enemyCurrentHP -= currentLocation.listOfEnemies[0].damageTaken
-//
+
 //          Checks if the enemy's health has gone below zero and if so sets it equal.
             if (currentLocation.listOfEnemies[0].enemyCurrentHP < 0) currentLocation.listOfEnemies[0].enemyCurrentHP = 0
 
 //          Checks if alive
             currentLocation.listOfEnemies[0].doIBreathe()
         }
+
         if (!currentLocation.listOfEnemies[0].alive) {
 
 //           If not alive, completes the location which signals the main window to spawn the weapon dropped.
@@ -482,6 +483,7 @@ class MainWindow(val app: App) {
             ("${app.currentLocation.listOfEnemies[0].enemyName}:\"${app.currentLocation.listOfEnemies[0].listOfDialogues[indexOfCurrentDialogue]}\"")
         indexOfCurrentDialogue++
 
+
         panel.revalidate()
         panel.repaint()
 
@@ -489,6 +491,8 @@ class MainWindow(val app: App) {
         if (indexOfCurrentDialogue >= app.currentLocation.listOfEnemies[0].listOfDialogues.size) {
             lastDialogue = true
         }
+
+
     }
 
     /**
@@ -523,6 +527,7 @@ class MainWindow(val app: App) {
         if (currentTitleScreen >= titleScreens.size) {
             lastTitleScreen = true
         }
+        println(lastTitleScreen)
     }
 
     /**
@@ -960,7 +965,9 @@ class Enemy(
      * Arguments: player (Player) - The current player playing.
      */
     fun calculateDamage(player: Player) {
+
         val randomDamageElement = (10..50).random()
+
         val totalDamage = (player.calculateDamage() + randomDamageElement)
         damageTaken = totalDamage
 

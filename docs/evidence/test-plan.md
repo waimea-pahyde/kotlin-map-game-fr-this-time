@@ -69,3 +69,157 @@ The left and right arrows disable until the weapon is picked up.
 
 ---
 
+## Valid - testing that weapon damage is correct
+
+Testing that the weapon damage gets multiplied by the damage multiplier
+
+### Test Data To Use
+
+I will pick up the weapon in map[2], then print out the damage multiplier. 
+
+### Expected Test Result
+
+The print equation will display correctly. 
+
+---
+
+## Boundry - testing that the random damage stays between 10-50
+
+Testing that the random addition to the damage stays between 10-50 damage
+
+### Test Data To Use
+
+I will print out the random damage element 10 times, and check if it goes in or out of those bounds. 
+### Expected Test Result
+
+I will get 10 damages between 10 and 50, which could include 10 & 50. 
+
+---
+
+## Valid - Enemy takes the correct amount of damage 
+
+Testing that the enemy takes the amount of damage it's supposed to 
+
+### Test Data To Use
+
+I will print out the amount of damage done, and then cross reference it to the amount of damage the pop up supplies. 
+I will also check it against the enemys health before and after.
+
+### Expected Test Result
+
+Both the print statement and the popup will show the correct amount of damage. 
+
+---
+
+## Boundary - Enemy becomes dead once it's health hits zero 
+
+Testing that the status of the enemy becomes 'dead' once it's health hits zero, not the tick after. 
+
+### Test Data To Use
+
+I will print out the amount of health the enemy has & it's status for three different enemys.
+
+### Expected Test Result
+
+The print out should never say '0 health' and alive . IT should only show the enemies on low health, then on 0 health and dead. 
+
+---
+
+## Boundary - Enemy becomes dead once it's health hits zero
+
+Testing that the status of the enemy becomes 'dead' once it's health hits zero, not the tick after.
+
+### Test Data To Use
+
+I will print out the amount of health the enemy has & it's status for three different enemys.
+
+### Expected Test Result
+
+The print out should never say '0 health' and alive . IT should only show the enemies on low health, then on 0 health and dead.
+
+---
+
+## Invalid - player can't move while the enemy is still alive
+
+Testing that the player cannot change rooms while the enemy is still alive 
+
+### Test Data To Use
+
+I will try to move rooms while fighting an enemy. 
+
+### Expected Test Result
+
+The buttons to move left and right will be disabled.
+
+---
+
+## Valid - clicking through dialogue increments index of current dialogue
+
+Testing that clicking through the dialogue will increase the indexOfCurrentDialogue variable. 
+
+### Test Data To Use
+
+I will click through the dialogue while printing out the variable to see if it increases
+
+### Expected Test Result
+
+The number will increase
+
+---
+
+## Boundary - Clicking on the last dialogue sets lastDialogue to true
+
+Testing that when clicking on the last dialogue, it says the variable 'lastDialogue' to true.
+
+### Test Data To Use
+
+I will click through the dialogue while printing out the last dialogue, and when on the lsat dialogue for any given enemy, it should set it to true
+
+### Expected Test Result
+
+On the last dialogue, the variable will be set to true
+
+---
+
+## Boundary - being on the last title screen sets lasttitlescreen to true
+
+Testing that when clicking on the last title screen, it sets the variable 'lastTitleScreen' to true.
+
+### Test Data To Use
+
+I will click through the title screens while printing out the last titlescreen, and when on the lsat title screen, it should set it to true
+
+### Expected Test Result
+
+On the last title screen, the variable will be set to true
+
+---
+
+## Valid - testing the game is won when all locations are complete
+
+Testing that the game is won when all the title screens are set to complete. 
+
+### Test Data To Use
+
+I will complete all locations, and once I have beaten the last location, see if the win game screen triggers. 
+
+### Expected Test Result
+
+Once I kill the last enemy, the win title screen should trigger. 
+
+---
+
+## Valid - testing the is lost when the player runs out of health 
+
+Testing that the game is lost when the player health hits 0
+
+### Test Data To Use
+
+I will lose when fighting an enemy and make sure the screen triggers. 
+
+### Expected Test Result
+
+One I run out of health, 
+
+---
+

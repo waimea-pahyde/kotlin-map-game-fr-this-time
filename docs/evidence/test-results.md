@@ -64,10 +64,181 @@ I will try to move on from map[0] while the weapon hasn't been picked up, then p
 
 ### Test Result
 
-![Can't Go That Way!](screenshots/cantGoThatWay.png)
+![Buttons enabling](screenshots/buttonsEnable.gif)
 
-The program informs the user they cannot go that way
+The buttons enable once the weapon has been picked up, until they the buttons disable.
 
 ---
+
+## Valid - testing that weapon damage is correct
+
+Testing that the weapon damage gets multiplied by the damage multiplier
+
+
+### Test Data Used
+
+I picked up the weapon in map[2], then print out the damage multiplier.
+
+### Test Result
+
+![damage calculating correctly](screenshots/damageMultiplierTest.png)
+
+The damage returned from the function was 300, because the weapon multiplier for the previous room was 3, and the player base damage is 100.
+
+---
+
+## Boundry - testing that the random damage stays between 10-50
+
+Testing that the random addition to the damage stays between 10-50 damage
+
+
+### Test Data Used
+
+I printed out the random damage element 10 times, and checked if it went in or out of those bounds.
+
+### Test Result
+
+![damage staying in bounds](screenshots/randomBounds.png)
+
+All the random damage elements stayed in the bounds of 10 and 50
+
+---
+
+## Valid - Enemy takes the correct amount of damage
+
+Testing that the enemy takes the amount of damage it's supposed to
+
+### Test Data Used
+
+I printed out the amount of damage done, and then cross referenced it to the amount of damage the pop up supplies.
+I also checked it against the enemys health before and after.
+
+### Test Result
+
+Enemy health Before
+
+![enemy health before](screenshots/enemyHealthBefore.png)
+
+Pop up: 
+
+![Damage pop up](screenshots/damagePopUp.png)
+
+Damage dealt:
+
+![damage dealt](screenshots/damageTerminal.png)
+
+Enemy Health AFter
+
+![enemy health after](screenshots/enemyHealthAfter.png)
+
+The enemy is dealt the correct amount of damage. 
+
+---
+
+## Boundary - Enemy becomes dead once it's health hits zero
+
+Testing that the status of the enemy becomes 'dead' once it's health hits zero, not the tick after.
+
+### Test Data Used
+
+I printed out the amount of health the enemy has & it's status for three different enemys.
+
+### Test Result
+
+Enemy 1 health:
+
+![Enemy 1 health](screenshots/enemy1Health.png)
+
+Enemy 2 health:
+
+![enemy 2 health](screenshots/enemy2Health.png)
+
+Enemy 3 health:
+
+![enemy 3 health](screenshots/enemy3Health.png)
+
+The enemy is marked dead as soon as it's health is 0
+
+---
+
+## Invalid - player can't move while the enemy is still alive
+
+Testing that the player cannot change rooms while the enemy is still alive
+
+### Test Data Used
+
+I tried to move rooms while fighting an enemy.
+
+### Test Result
+
+TO DO
+
+---
+
+## Valid - clicking through dialogue increments index of current dialogue
+
+Testing that clicking through the dialogue will increase the indexOfCurrentDialogue variable.
+
+### Test Data Used
+
+I clicked through the dialogue while printing out the variable to see if it increases
+
+### Test Result
+
+![dialogue Increasing](screenshots/dialogueIncreasing.png)
+
+The number increased. 
+
+---
+
+## Boundary - Clicking on the last dialogue sets lastDialogue to true
+
+Testing that when clicking on the last dialogue, it says the variable 'lastDialogue' to true.
+
+### Test Data Used
+
+I clicked through the dialogue while printing out the last dialogue, and when on the lsat dialogue for any given enemy
+
+### Test Result
+
+The eye of Jerry has three dialogues, and as you can see here, on the third dialogue, lastDialogue was set to true
+
+![last dialogue](screenshots/jerrysThreeDialogues.png)
+
+---
+
+## Boundary - being on the last title screen sets lasttitlescreen to true
+
+Testing that when clicking on the last title screen, it sets the variable 'lastTitleScreen' to true.
+
+### Test Data Used
+
+I clicked  through the title screens while printing out the last titlescreen
+
+### Test Result
+
+On the last of the six title screens, the variable set to true
+
+![title screen](screenshots/titleScreens.png)
+
+---
+
+## Valid - testing the game is won when all locations are complete
+
+Testing that the game is won when all the title screens are set to complete.
+
+### Test Data Used
+
+I completed all locations, and checked if the win screen triggered
+
+### Expected Result
+
+TO DO 
+---
+
+
+
+
+
 
 
