@@ -1,6 +1,9 @@
 # Results of Testing
 
 The test results show the actual outcome of the testing, following the [Test Plan](test-plan.md)
+This is the map of my game:
+
+![Map](screenshots/map.png)
 
 ---
 
@@ -74,7 +77,6 @@ The buttons enable once the weapon has been picked up, until they the buttons di
 
 Testing that the weapon damage gets multiplied by the damage multiplier
 
-
 ### Test Data Used
 
 I picked up the weapon in map[2], then print out the damage multiplier.
@@ -83,14 +85,14 @@ I picked up the weapon in map[2], then print out the damage multiplier.
 
 ![damage calculating correctly](screenshots/damageMultiplierTest.png)
 
-The damage returned from the function was 300, because the weapon multiplier for the previous room was 3, and the player base damage is 100.
+The damage returned from the function was 300, because the weapon multiplier for the previous room was 3, and the player
+base damage is 100.
 
 ---
 
-## Boundry - testing that the random damage stays between 10-50
+## Valid - testing that the random damage stays between 10-50
 
 Testing that the random addition to the damage stays between 10-50 damage
-
 
 ### Test Data Used
 
@@ -119,7 +121,7 @@ Enemy health Before
 
 ![enemy health before](screenshots/enemyHealthBefore.png)
 
-Pop up: 
+Pop up:
 
 ![Damage pop up](screenshots/damagePopUp.png)
 
@@ -131,7 +133,7 @@ Enemy Health AFter
 
 ![enemy health after](screenshots/enemyHealthAfter.png)
 
-The enemy is dealt the correct amount of damage. 
+The enemy is dealt the correct amount of damage.
 
 ---
 
@@ -171,7 +173,13 @@ I tried to move rooms while fighting an enemy.
 
 ### Test Result
 
-TO DO
+![cant move rooms](screenshots/can'tMoveRooms.gif)
+
+The buttons disappear while fighting the enemy
+
+![buttons appear](screenshots/buttonsReappear.png)
+
+Once the enemy is dead, the buttons reappear.
 
 ---
 
@@ -187,7 +195,7 @@ I clicked through the dialogue while printing out the variable to see if it incr
 
 ![dialogue Increasing](screenshots/dialogueIncreasing.png)
 
-The number increased. 
+The number increased.
 
 ---
 
@@ -213,7 +221,7 @@ Testing that when clicking on the last title screen, it sets the variable 'lastT
 
 ### Test Data Used
 
-I clicked  through the title screens while printing out the last titlescreen
+I clicked through the title screens while printing out the last titlescreen
 
 ### Test Result
 
@@ -231,14 +239,72 @@ Testing that the game is won when all the title screens are set to complete.
 
 I completed all locations, and checked if the win screen triggered
 
-### Expected Result
+### Result
 
-TO DO 
+![game won](screenshots/gameWinningAndTime.gif)
+
+Once I killed Jerry, the game win screen triggered.
+
 ---
 
+## Valid - testing the is lost when the player runs out of health
 
+Testing that the game is lost when the player health hits 0
 
+### Test Data Used
 
+I lost while fighting an enemy
 
+### Test Result
 
+![You can die](screenshots/youCanDie.gif)
 
+Once my health ran out, the death screen triggered.
+
+---
+
+## Valid - the player can move from one location to the next
+
+Testing that the player can move from one location to the next
+
+### Test Data Used
+
+I moved from one location to the next and back again.
+
+### Test Result
+
+![moving](screenshots/moving.gif)
+
+Once the enemy was dead and the weapon was picked up, the player could move as intended.
+
+---
+
+## Valid - the game will show how many seconds it took the player to beat the game
+
+Testing that, once the game is won, the game will show the player how many seconds it took them.
+
+### Test Data Used
+
+I beat the game and started a timer to see how long it took me.
+
+### Test Result
+
+![time Showing](screenshots/gameWinningAndTime.gif)
+
+Once I beat Jerry, the game showed me the correct time.
+
+---
+
+## Valid - clicking on the dialogue advances it forward and starts the game on the last one.
+
+Testing that the player can click on the dialogue and it will change, and start the game.
+
+### Test Data Used
+
+I clicked on the dialogue and see if it advances it forward.
+
+### Test Result
+
+![advanceDialogue](screenshots/advanceDialogue.gif)
+
+---

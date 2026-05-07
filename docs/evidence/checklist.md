@@ -50,15 +50,15 @@ The program code:
 
 The program has been tested and there is documented evidence that:
 
-- [ ] The game is **fully functional**, showing testing of:
-    - [ ] game setup
-    - [ ] player movement
-    - [ ] other player actions
-    - [ ] scoring (if any)
-    - [ ] player win / lose states
-    - [ ] final feedback (if appropriate)
-- [ ] **Valid (expected) data** has been used to test **all data inputs**
-- [ ] Where tests have failed, **fixes** are discussed and **tests re-run**
+- [x] The game is **fully functional**, showing testing of:
+    - [x] game setup
+    - [x] player movement
+    - [x] other player actions
+    - [x] scoring (if any)
+    - [x] player win / lose states
+    - [x] final feedback (if appropriate)
+- [x] **Valid (expected) data** has been used to test **all data inputs**
+- [x] Where tests have failed, **fixes** are discussed and **tests re-run**
 
 ---
 
@@ -68,48 +68,48 @@ The program has been tested and there is documented evidence that:
 
 The program stores data using variables, where:
 
-- [ ] Variable **names are well-chosen** (relating to their purpose)
-- [ ] Variable names **begin with lowercase**
-- [ ] Naming is consistent, either **camelCase or snake_case**
-- [ ] Variables are **scoped appropriately** (global or local to a function)
-- [ ] **Global** variables are only used if **genuinely needed**
+- [x] Variable **names are well-chosen** (relating to their purpose)
+- [x] Variable names **begin with lowercase**
+- [x] Naming is consistent, either **camelCase or snake_case**
+- [x] Variables are **scoped appropriately** (global or local to a function)
+- [x] **Global** variables are only used if **genuinely needed**
 
 The program uses OOP classes and objects appropriately, where:
 
 - [ ] OOP class **names are well-chosen**, relating to their functionality
-- [ ] OOP class names **begin with uppercase**
+- [x] OOP class names **begin with uppercase**
 - [ ] OOP classes contain **well-chosen data fields**
 - [ ] OOP classes contain **well-chosen methods**
 
 The program uses functions appropriately, where:
 
-- [ ] Function **names are well-chosen**, relating to their functionality
-- [ ] Functions use **parameters** to pass data into them as needed
-- [ ] Functions provide a **return value** to the calling code if needed
+- [x] Function **names are well-chosen**, relating to their functionality
+- [x] Functions use **parameters** to pass data into them as needed
+- [x] Functions provide a **return value** to the calling code if needed
 
 ### Game GUI
 
 The game GUI:
 
-- [ ] Adheres to **common conventions** (e.g. buttons look like buttons, etc.)
+- [x] Adheres to **common conventions** (e.g. buttons look like buttons, etc.)
 
 ### Program Documentation
 
 The program code is well-commented:
 
-- [ ] **JavaDoc Block comments** are used at the top of each **file** and **function**
-- [ ] Comments accurately describe the **function and behaviour** of the code:
-    - [ ] Defining the **purpose** of functions / key blocks of code
-    - [ ] Explaining the **reason** (the '**why**') of key parts of the code
-    - [ ] Defining function **parameters** and/or **return values**
+- [x] **JavaDoc Block comments** are used at the top of each **file** and **function**
+- [x] Comments accurately describe the **function and behaviour** of the code:
+    - [x] Defining the **purpose** of functions / key blocks of code
+    - [x] Explaining the **reason** (the '**why**') of key parts of the code
+    - [x] Defining function **parameters** and/or **return values**
 
 ### Program Testing
 
 The program has been tested using:
 
-- [ ] A test plan **prepared in advance** of the coding
-- [ ] A test plan that **defines test data values** to be used
-- [ ] Test values that cover **boundary** (limit / edge) cases
+- [x] A test plan **prepared in advance** of the coding
+- [x] A test plan that **defines test data values** to be used
+- x ] Test values that cover **boundary** (limit / edge) cases
 
 ---
 

@@ -75,11 +75,11 @@ Testing that the weapon damage gets multiplied by the damage multiplier
 
 ### Test Data To Use
 
-I will pick up the weapon in map[2], then print out the damage multiplier. 
+I will pick up the weapon in map[2], then print out the damage multiplier.
 
 ### Expected Test Result
 
-The print equation will display correctly. 
+The print equation will display correctly.
 
 ---
 
@@ -89,39 +89,26 @@ Testing that the random addition to the damage stays between 10-50 damage
 
 ### Test Data To Use
 
-I will print out the random damage element 10 times, and check if it goes in or out of those bounds. 
+I will print out the random damage element 10 times, and check if it goes in or out of those bounds.
+
 ### Expected Test Result
 
-I will get 10 damages between 10 and 50, which could include 10 & 50. 
+I will get 10 damages between 10 and 50, which could include 10 & 50.
 
 ---
 
-## Valid - Enemy takes the correct amount of damage 
+## Valid - Enemy takes the correct amount of damage
 
-Testing that the enemy takes the amount of damage it's supposed to 
+Testing that the enemy takes the amount of damage it's supposed to
 
 ### Test Data To Use
 
-I will print out the amount of damage done, and then cross reference it to the amount of damage the pop up supplies. 
+I will print out the amount of damage done, and then cross reference it to the amount of damage the pop up supplies.
 I will also check it against the enemys health before and after.
 
 ### Expected Test Result
 
-Both the print statement and the popup will show the correct amount of damage. 
-
----
-
-## Boundary - Enemy becomes dead once it's health hits zero 
-
-Testing that the status of the enemy becomes 'dead' once it's health hits zero, not the tick after. 
-
-### Test Data To Use
-
-I will print out the amount of health the enemy has & it's status for three different enemys.
-
-### Expected Test Result
-
-The print out should never say '0 health' and alive . IT should only show the enemies on low health, then on 0 health and dead. 
+Both the print statement and the popup will show the correct amount of damage.
 
 ---
 
@@ -135,17 +122,33 @@ I will print out the amount of health the enemy has & it's status for three diff
 
 ### Expected Test Result
 
-The print out should never say '0 health' and alive . IT should only show the enemies on low health, then on 0 health and dead.
+The print out should never say '0 health' and alive . IT should only show the enemies on low health, then on 0 health
+and dead.
+
+---
+
+## Boundary - Enemy becomes dead once it's health hits zero
+
+Testing that the status of the enemy becomes 'dead' once it's health hits zero, not the tick after.
+
+### Test Data To Use
+
+I will print out the amount of health the enemy has & it's status for three different enemys.
+
+### Expected Test Result
+
+The print out should never say '0 health' and alive . IT should only show the enemies on low health, then on 0 health
+and dead.
 
 ---
 
 ## Invalid - player can't move while the enemy is still alive
 
-Testing that the player cannot change rooms while the enemy is still alive 
+Testing that the player cannot change rooms while the enemy is still alive
 
 ### Test Data To Use
 
-I will try to move rooms while fighting an enemy. 
+I will try to move rooms while fighting an enemy.
 
 ### Expected Test Result
 
@@ -155,7 +158,7 @@ The buttons to move left and right will be disabled.
 
 ## Valid - clicking through dialogue increments index of current dialogue
 
-Testing that clicking through the dialogue will increase the indexOfCurrentDialogue variable. 
+Testing that clicking through the dialogue will increase the indexOfCurrentDialogue variable.
 
 ### Test Data To Use
 
@@ -173,7 +176,8 @@ Testing that when clicking on the last dialogue, it says the variable 'lastDialo
 
 ### Test Data To Use
 
-I will click through the dialogue while printing out the last dialogue, and when on the lsat dialogue for any given enemy, it should set it to true
+I will click through the dialogue while printing out the last dialogue, and when on the lsat dialogue for any given
+enemy, it should set it to true
 
 ### Expected Test Result
 
@@ -187,7 +191,8 @@ Testing that when clicking on the last title screen, it sets the variable 'lastT
 
 ### Test Data To Use
 
-I will click through the title screens while printing out the last titlescreen, and when on the lsat title screen, it should set it to true
+I will click through the title screens while printing out the last titlescreen, and when on the lsat title screen, it
+should set it to true
 
 ### Expected Test Result
 
@@ -197,29 +202,70 @@ On the last title screen, the variable will be set to true
 
 ## Valid - testing the game is won when all locations are complete
 
-Testing that the game is won when all the title screens are set to complete. 
+Testing that the game is won when all the title screens are set to complete.
 
 ### Test Data To Use
 
-I will complete all locations, and once I have beaten the last location, see if the win game screen triggers. 
+I will complete all locations, and once I have beaten the last location, see if the win game screen triggers.
 
 ### Expected Test Result
 
-Once I kill the last enemy, the win title screen should trigger. 
+Once I kill the last enemy, the win title screen should trigger.
 
 ---
 
-## Valid - testing the is lost when the player runs out of health 
+## Valid - testing the is lost when the player runs out of health
 
 Testing that the game is lost when the player health hits 0
 
 ### Test Data To Use
 
-I will lose when fighting an enemy and make sure the screen triggers. 
+I will lose when fighting an enemy and make sure the screen triggers.
 
 ### Expected Test Result
 
-One I run out of health, 
+Once I run out of health, the game over screen will trigger.
 
 ---
 
+## Valid - the player can move from one location to the next
+
+Testing that the player can move from one location to the next
+
+### Test Data To Use
+
+I will move from one location to the next and back again.
+
+### Expected Test Result
+
+The room will change when I press the change room arrows.
+
+---
+
+## Valid - the game will show how many seconds it took the player to beat the game
+
+Testing that, once the game is won, the game will show the player how many seconds it took them.
+
+### Test Data To Use
+
+I will beat the game and see if it shows.
+
+### Expected Test Result
+
+The game will show how many seconds it took.
+
+---
+
+## Valid - clicking on the dialogue advances it forward and starts the game on the last one.
+
+Testing that the player can click on the dialogue and it will change, and start the game.
+
+### Test Data To Use
+
+I will click on the dialogue and see if it advances it forward.
+
+### Expected Test Result
+
+The dialogue will cycle through and then start the game.
+
+---

@@ -1,15 +1,19 @@
+/**
+ * =====================================================================
+ * Programming Project for NCEA Level 3, Standard 91906
+ * ---------------------------------------------------------------------
+ * Project Name:   Eggplant Quest
+ * Project Author: Polly Hyde
+ * GitHub Repo:    https://github.com/waimea-pahyde/kotlin-map-game-l3
+ * =====================================================================
+ */
+
+
 import com.formdev.flatlaf.themes.FlatMacDarkLaf
 import java.awt.Font
 import java.awt.Point
 import javax.swing.*
 import kotlin.math.sin
-
-/**
- * ==============
- * EGGPLANT QUEST
- * ==============
- * L3 Programming assessment by Polly Hyde
- */
 
 
 /**
@@ -75,7 +79,7 @@ class App {
             "David the Duck Cat",
             1000,
             1000,
-            ImageIcon(ClassLoader.getSystemResource("images/duckLake.png")).scaled(1194, 834),
+            ImageIcon(ClassLoader.getSystemResource("images/duckLake.png")),
             ImageIcon(ClassLoader.getSystemResource("images/duckCat.png")),
             true,
             100,
@@ -255,9 +259,9 @@ class App {
  *
  * @param app the app state object
  */
-class MainWindow(val app: App) {
+class MainWindow(private val app: App) {
 
-    val frame = JFrame("Eggplant Quest")
+    private val frame = JFrame("Eggplant Quest")
     private val panel = JLayeredPane().apply { layout = null }
 
     // ==== Full screens ====
@@ -269,11 +273,11 @@ class MainWindow(val app: App) {
     private val winScreen =
         JLabel(ImageIcon(ClassLoader.getSystemClassLoader().getResource("images/winScreen.PNG")).scaled(1194, 834))
 
-    var titleScreens = mutableListOf<JLabel>()
+    private var titleScreens = mutableListOf<JLabel>()
 
     //    ======Enemy Images=======
     private val jerryBackground = ImageIcon(ClassLoader.getSystemResource("images/cabin.jpg"))
-    val background = JLabel(jerryBackground)
+    private val background = JLabel(jerryBackground)
 
     private val enemyName = JLabel(app.currentLocation.listOfEnemies[0].enemyName)
 
@@ -287,7 +291,7 @@ class MainWindow(val app: App) {
     private val droppedWeapon = JButton(app.currentLocation.listOfEnemies[0].weaponImage)
 
     //    ==== UI Elements ====
-    val leftArrow = ImageIcon(ClassLoader.getSystemResource("images/arrowPointingRight.png"))
+    private val leftArrow = ImageIcon(ClassLoader.getSystemResource("images/arrowPointingRight.png"))
     private val goRightButton = JButton(ImageIcon(ClassLoader.getSystemResource("images/arrow.png")).scaled(90, 90))
     private val goLeftButton = JButton(leftArrow.scaled(90, 90))
 
@@ -453,18 +457,18 @@ class MainWindow(val app: App) {
         playerHealTimer.addActionListener { healPlayer() }
     }
 
-    var score = 0
-    var currentTitleScreen = 0
-    var lastTitleScreen = false
-    var indexOfCurrentDialogue = 0
-    var lastDialogue = false
+    private var score = 0
+    private var currentTitleScreen = 0
+    private var lastTitleScreen = false
+    private var indexOfCurrentDialogue = 0
+    private var lastDialogue = false
 
 
     /**
      * Invoked by the dialogue at the start of the fight
      * Handles the enemies' dialogue, and if on the last one, starts the room.
      */
-    fun handleDialogueClick() {
+    private fun handleDialogueClick() {
         if (lastDialogue) { // Checking for game start
             panel.remove(enemyDialogue)
             panel.remove(background) //The background that gets overlaid to cover the ui elements.
@@ -487,7 +491,7 @@ class MainWindow(val app: App) {
         panel.revalidate()
         panel.repaint()
 
-//        If last dialogue, sets the variable to true so it does the last dialogue instead of the second last and starting the room.
+//        If last dialogue, sets the variable to true, so it does the last dialogue instead of the second last and starting the room.
         if (indexOfCurrentDialogue >= app.currentLocation.listOfEnemies[0].listOfDialogues.size) {
             lastDialogue = true
         }
@@ -498,7 +502,7 @@ class MainWindow(val app: App) {
     /**
      * Gets called by the timer started in gameStart function. After that, adds 10 health a second.
      */
-    fun healPlayer() {
+    private fun healPlayer() {
         if (app.currentPlayer.currentHealth <= 999) {
 
             app.currentPlayer.currentHealth++
@@ -510,7 +514,7 @@ class MainWindow(val app: App) {
      * Progresses through the title screens to give the game context. Checks for the last title screen.
      * If it is the last title screen, starts the game.
      */
-    fun handleTitleScreenTimer() {
+    private fun handleTitleScreenTimer() {
         if (lastTitleScreen) {
             titleScreenTimer.stop()
             panel.remove(titleScreens[currentTitleScreen - 1])
@@ -527,7 +531,7 @@ class MainWindow(val app: App) {
         if (currentTitleScreen >= titleScreens.size) {
             lastTitleScreen = true
         }
-        println(lastTitleScreen)
+
     }
 
     /**
@@ -535,7 +539,7 @@ class MainWindow(val app: App) {
      * Adds a background on top to hide some ui elements that are disabled for clarity that they aren't dead
      * Also shows the place dialogue, announcing to the player they have enetered a new room.
      */
-    fun doRoomDialogue() {
+    private fun doRoomDialogue() {
         panel.add(background, JLayeredPane.DEFAULT_LAYER + 4)
         panel.setLayer(titleBackground, JLayeredPane.DEFAULT_LAYER + 5)
         panel.setLayer(
@@ -993,7 +997,7 @@ class Location(
  * Makes a player.
  */
 class Player(
-    val baseDamage: Int = 100,
+    private val baseDamage: Int = 100,
     val health: Int = 1000,
     var currentHealth: Int = 1000,
     var alive: Boolean = true,
